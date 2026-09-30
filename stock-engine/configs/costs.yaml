@@ -1,0 +1,7 @@
+# Cost configuration (placeholders, to be filled on Day 8)
+costs:
+  brokerage: 0.0005   # 0.05% per trade
+  stamp_duty: 0.0001  # 0.01% on buy
+  gst: 0.0001         # 0.01% on brokerage
+  sebi_charges: 0.000001 # negligible
+  slippage: 0.0005    # 0.05% per trade

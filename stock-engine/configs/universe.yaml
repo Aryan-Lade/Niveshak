@@ -1,0 +1,30 @@
+# Universe of 20 liquid NSE stocks (yfinance tickers)
+universe:
+  - RELIANCE.NS
+  - TCS.NS
+  - HDFCBANK.NS
+  - INFY.NS
+  - ICICIBANK.NS
+  - ITC.NS
+  - SBIN.NS
+  - BHARTIARTL.NS
+  - LT.NS
+  - KOTAKBANK.NS
+  - AXISBANK.NS
+  - HINDUNILVR.NS
+  - BAJFINANCE.NS
+  - MARUTI.NS
+  - SUNPHARMA.NS
+  - TITAN.NS
+  - ASIANPAINT.NS
+  - WIPRO.NS
+  - NTPC.NS
+  - ONGC.NS
+
+# Index/macro symbols
+index_macro:
+  - ^NSEI   # NIFTY 50
+  - ^INDIAVIX
+  - USDINR=X
+  - ^GSPC   # S&P 500
+  - CL=F    # crude oil

@@ -1,0 +1,10 @@
+# Data configuration
+data:
+  # Start date for historical data
+  start_date: "2012-01-01"
+  # Final holdout start date (do not touch until Day 30)
+  holdout_start: "2025-10-01"
+  # Horizon days for labels (e.g., 5 for next week)
+  horizon_days: 5
+  # Random seed for reproducibility
+  seed: 42
