@@ -1,7 +1,6 @@
-# Risk configuration (placeholders, to be filled on Day 23)
 risk:
-  max_position_size: 0.05   # 5% of capital per stock
-  max_sector_exposure: 0.25 # 25% per sector
-  max_drawdown_limit: 0.15  # 15% max drawdown
-  var_limit: 0.05           # 5% VaR (95%)
-  leverage_limit: 1.0       # No leverage
+  max_position_size: 0.05  
+  max_sector_exposure: 0.25
+  max_drawdown_limit: 0.15
+  var_limit: 0.05    
+  leverage_limit: 1.0
