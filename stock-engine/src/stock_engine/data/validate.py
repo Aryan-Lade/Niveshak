@@ -2,7 +2,7 @@ import pandas as pd
 import os
 import logging
 from datetime import datetime
-
+# Code for validation
 def validate_prices(data):
     if data.empty:
         logging.warning("No data to validate")
@@ -12,7 +12,7 @@ def validate_prices(data):
 
     df['date'] = pd.to_datetime(df['date'])
 
-    validation_results = []
+    validation_results =[]
 
     tickers = df['ticker'].unique()
 
@@ -89,7 +89,7 @@ def validate_prices(data):
                 'message': f'Found {large_gaps} gaps longer than 5 business days',
                 'count': int(large_gaps)
             })
-
+        
         ticker_data['returns'] = ticker_data['close'].pct_change()
         extreme_returns = (ticker_data['returns'].abs() > 0.25).sum()
         if extreme_returns > 0:
@@ -204,3 +204,7 @@ if __name__ == "__main__":
     validation_results = validate_prices(cleaned_data)
 
     save_validation_report(validation_results)
+
+    count=0
+
+
