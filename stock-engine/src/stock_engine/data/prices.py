@@ -32,7 +32,7 @@ def download_prices(tickers, start, end):
 
             data['ticker'] = ticker
 
-            data = data[['date', 'ticker', 'open', 'high', 'low', 'close', 'volume']]
+            data = data[['date', 'ticker', 'Open', 'High', 'Low', 'Close', 'Volume']]
 
             data['date'] = pd.to_datetime(data['date']).dt.date
 
@@ -44,13 +44,13 @@ def download_prices(tickers, start, end):
             continue
 
     if not all_data:
-        return pd.DataFrame(columns=['date', 'ticker', 'open', 'high', 'low', 'close', 'volume'])
+        return pd.DataFrame(columns=['date', 'ticker', 'Open', 'High', 'Low', 'Close', 'Volume'])
 
     combined_data = pd.concat(all_data, ignore_index=True)
     return combined_data
 
 def get_cached_data(ticker):
-    cache_dir = "data_store/raw/prices"
+    cache_dir = "../data_store/raw/prices"
     cache_file = os.path.join(cache_dir, f"{ticker}.parquet")
 
     if os.path.exists(cache_file):
@@ -63,7 +63,7 @@ def get_cached_data(ticker):
         return pd.DataFrame()
 
 def save_to_cache(ticker, data):
-    cache_dir = "data_store/raw/prices"
+    cache_dir = "../data_store/raw/prices"
     os.makedirs(cache_dir, exist_ok=True)
     cache_file = os.path.join(cache_dir, f"{ticker}.parquet")
 
@@ -108,7 +108,7 @@ def update_prices(tickers, start, end):
             new_data = new_data.reset_index()
             new_data = new_data.rename(columns={'Date': 'date'})
             new_data['ticker'] = ticker
-            new_data = new_data[['date', 'ticker', 'open', 'high', 'low', 'close', 'volume']]
+            new_data = new_data[['date', 'ticker', 'Open', 'High', 'Low', 'Close', 'Volume']]
             new_data['date'] = pd.to_datetime(new_data['date']).dt.date
 
             if not cached_data.empty:
@@ -126,14 +126,14 @@ def update_prices(tickers, start, end):
             time.sleep(0.1)
 
         except Exception as e:
-            logging.error(f"Failed to update prices for {ticker}: {str(e)}")
+            logging.error(f"Failed to update prices for {ticker}: {str(e)}", exc_info=True)
             cached_data = get_cached_data(ticker)
             if not cached_data.empty:
                 all_new_data.append(cached_data)
             continue
 
     if not all_new_data:
-        return pd.DataFrame(columns=['date', 'ticker', 'open', 'high', 'low', 'close', 'volume'])
+        return pd.DataFrame(columns=['date', 'ticker', 'Open', 'High', 'Low', 'Close', 'Volume'])
 
     final_data = pd.concat(all_new_data, ignore_index=True)
     return final_data
@@ -149,14 +149,14 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.update:
-        with open('../../configs/universe.yaml', 'r') as f:
+        with open('../../../configs/universe.yaml', 'r') as f:
             universe_config = yaml.safe_load(f)
 
-        with open('../../configs/data.yaml', 'r') as f:
+        with open('../../../configs/data.yaml', 'r') as f:
             data_config = yaml.safe_load(f)
 
         tickers = universe_config['universe']
-        start_date = data_config['start_date']
+        start_date = data_config['data']['start_date']
         end_date = datetime.now().strftime('%Y-%m-%d')
 
         logging.info(f"Starting price update for {len(tickers)} tickers from {start_date} to {end_date}")
