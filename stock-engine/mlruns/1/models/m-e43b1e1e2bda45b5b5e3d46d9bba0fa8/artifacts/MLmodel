@@ -1,0 +1,27 @@
+artifact_path: file:F:/03. Interview's/02. Project/Niveshak/stock-engine/mlruns/1/models/m-e43b1e1e2bda45b5b5e3d46d9bba0fa8/artifacts
+flavors:
+  lightgbm:
+    code: null
+    data: model.lgb
+    lgb_version: 4.7.0
+    model_class: lightgbm.basic.Booster
+    serialization_format: skops
+    skops_trusted_types:
+    - lightgbm.sklearn.LGBMRegressor
+    - collections.OrderedDict
+    - lightgbm.sklearn.LGBMClassifier
+    - lightgbm.basic.Booster
+  python_function:
+    data: model.lgb
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.lightgbm
+    python_version: 3.13.9
+mlflow_version: 3.17.1
+model_id: m-e43b1e1e2bda45b5b5e3d46d9bba0fa8
+model_size_bytes: 21385
+model_uuid: m-e43b1e1e2bda45b5b5e3d46d9bba0fa8
+prompts: null
+run_id: 836df985e12d497a9e1213d72523448b
+utc_time_created: '2026-10-20 19:01:33.672391'
