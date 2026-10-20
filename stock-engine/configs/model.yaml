@@ -1,7 +1,36 @@
+# Walk-forward CV configuration
 model:
-  initial_train_years: 3
-  test_window_months: 6
-  step: 6
-  purge_days: 0
-  embargo_days: 5
-  label_period_days: 30
+  initial_train_years: 3        # Training window seed (expanding thereafter)
+  test_window_months: 6         # Length of each test fold
+  step: 6                       # Step (months) between fold starts
+  purge_days: 0                 # Extra purge beyond label_period_days
+  embargo_days: 5               # Trading days of embargo after test start
+  label_period_days: 5          # Forward window for label (aligns with horizon_days)
+
+# Label configuration
+label:
+  horizon_days: 5               # Forward return horizon
+  label_col: "label"            # Binary: 1 if fwd_ret > 0
+
+# Feature selection (per-fold, computed on TRAIN only)
+feature_selection:
+  max_missing_pct: 0.30         # Drop features with >30% NaN in train
+  max_corr: 0.95                # Drop one of any pair with |corr| >= 0.95
+  es_val_pct: 0.10              # Fraction of train tail used as early-stop val set
+
+# LightGBM classifier hyperparameters
+lgbm:
+  seed: 42
+  n_estimators: 500             # Max trees (early stopping will cut this)
+  learning_rate: 0.05
+  num_leaves: 31
+  max_depth: -1
+  min_child_samples: 20
+  subsample: 0.8
+  colsample_bytree: 0.8
+  reg_alpha: 0.1
+  reg_lambda: 0.1
+  class_weight: "balanced"
+  n_jobs: -1
+  verbose: -1
+  early_stopping_rounds: 50

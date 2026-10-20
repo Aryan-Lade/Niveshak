@@ -36,7 +36,7 @@ dependencies = [
     "feedparser>=6.0",
     "growwapi>=0.1",
 ]
-optional-dependencies
+[project.optional-dependencies]
 dev = [
     "pytest>=7.0",
     "pytest-cov>=4.0",
@@ -48,3 +48,7 @@ line-length = 88
 target-version = "py311"
 select = ["E", "F", "W", "C90"]
 ignore = []
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
