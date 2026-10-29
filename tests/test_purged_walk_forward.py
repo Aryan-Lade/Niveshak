@@ -23,7 +23,7 @@ def test_purged_walk_forward_initialization():
     assert cv.step_months == 6
     assert cv.purge_days == 0
     assert cv.embargo_days == 5
-    assert cv.label_period_days == 30
+    assert cv.label_period_days == 5
 
     cv_custom = PurgedWalkForwardCV(
         initial_train_years=2,

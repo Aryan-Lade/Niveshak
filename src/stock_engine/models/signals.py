@@ -14,7 +14,7 @@ def load_config(config_path: str | Path) -> dict:
 
 def compute_threshold(training_probs: np.ndarray, quantile: float) -> float:
     """Return the probability threshold at the given quantile of training predictions."""
-    return float(np.quantile(training_probs, quantile))
+    return float(np.quantile(training_probs, quantile, method="higher"))
 
 
 def generate_signals(
@@ -43,8 +43,8 @@ def generate_signals(
         if eligible.empty:
             return pd.DataFrame(columns=["date", "ticker", "signal"])
         top = eligible.nlargest(max_positions, "prob")
-        top = top["date", "ticker"].copy()
+        top = top[["date", "ticker"]].copy()
         top["signal"] = True
         return top
-    signals = predictions.groupby("date").apply(select_top).reset_index(drop=True)
+    signals = predictions.groupby("date", as_index=False, group_keys=False).apply(select_top, include_groups=True).reset_index(drop=True)
     return signals
