@@ -1,32 +1,7 @@
-brokerage:
-  flat_inr: 20.0
-  percentage: 0.05
-
-stt_ctt:
-  buy: 0.1
-  sell: 0.1
-
-exchange_transaction_charges:
-  buy: 0.00325
-  sell: 0.00325
-
-sebi_turnover_fee:
-  buy: 0.0001
-  sell: 0.0001
-
-stamp_duty:
-  buy: 0.015
-  sell: 0.0
-
-gst:
-  rate: 0.18
-
-dp_charge:
-  sell: 13.5
-  buy: 0.0
-
-slippage_bps:
-  buy: 2.0
-  sell: 2.0
-
-round_trip_cost_bps_fallback: 25
+# Cost configuration (placeholders, to be filled on Day 8)
+costs:
+  brokerage: 0.0005   # 0.05% per trade
+  stamp_duty: 0.0001  # 0.01% on buy
+  gst: 0.0001         # 0.01% on brokerage
+  sebi_charges: 0.000001 # negligible
+  slippage: 0.0005    # 0.05% per trade
