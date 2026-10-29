@@ -1,0 +1,96 @@
+# Ticker Name and Symbol Aliases for Grounded Entity Linking
+# Uses regex word boundaries \b...\b to avoid false positive substring matches.
+
+aliases:
+  RELIANCE.NS:
+    symbol: "RELIANCE"
+    patterns:
+      - '(?i)\breliance(?:\s+industries(?:\s+ltd)?)?\b'
+      - '(?i)\bril\b'
+  TCS.NS:
+    symbol: "TCS"
+    patterns:
+      - '(?i)\btata\s+consultancy\s+services\b'
+      - '(?i)\btcs\b'
+  HDFCBANK.NS:
+    symbol: "HDFCBANK"
+    patterns:
+      - '(?i)\bhdfc\s+bank\b'
+      - '(?i)\bhdfc\b'
+  INFY.NS:
+    symbol: "INFY"
+    patterns:
+      - '(?i)\binfosys(?:\s+technologies)?(?!\s+edge)\b'
+      - '(?i)\binfy\b'
+  ICICIBANK.NS:
+    symbol: "ICICIBANK"
+    patterns:
+      - '(?i)\bicici\s+bank\b'
+      - '(?i)\bicici\b'
+  ITC.NS:
+    symbol: "ITC"
+    patterns:
+      - '(?i)\bitc(?:\s+limited|\s+ltd)?\b'
+  SBIN.NS:
+    symbol: "SBIN"
+    patterns:
+      - '(?i)\bstate\s+bank\s+of\s+india\b'
+      - '(?i)\bsbi\b'
+  BHARTIARTL.NS:
+    symbol: "BHARTIARTL"
+    patterns:
+      - '(?i)\bbharti\s+airtel\b'
+      - '(?i)\bairtel\b'
+  LT.NS:
+    symbol: "LT"
+    patterns:
+      - '(?i)\blarsen\s+(?:&|and)\s+toubro\b'
+      - '(?i)\bl&t\b'
+  KOTAKBANK.NS:
+    symbol: "KOTAKBANK"
+    patterns:
+      - '(?i)\bkotak\s+(?:mahindra\s+)?bank\b'
+      - '(?i)\bkotak\b'
+  AXISBANK.NS:
+    symbol: "AXISBANK"
+    patterns:
+      - '(?i)\baxis\s+bank\b'
+  HINDUNILVR.NS:
+    symbol: "HINDUNILVR"
+    patterns:
+      - '(?i)\bhindustan\s+unilever\b'
+      - '(?i)\bhul\b'
+  BAJFINANCE.NS:
+    symbol: "BAJFINANCE"
+    patterns:
+      - '(?i)\bbajaj\s+finance\b'
+      - '(?i)\bbajaj\s+finserv\b'
+  MARUTI.NS:
+    symbol: "MARUTI"
+    patterns:
+      - '(?i)\bmaruti\s+(?:suzuki)?\b'
+  SUNPHARMA.NS:
+    symbol: "SUNPHARMA"
+    patterns:
+      - '(?i)\bsun\s+pharma(?:ceutical(?:s)?)?\b'
+  TITAN.NS:
+    symbol: "TITAN"
+    patterns:
+      - '(?i)\btitan(?:\s+company)?\b'
+  ASIANPAINT.NS:
+    symbol: "ASIANPAINT"
+    patterns:
+      - '(?i)\basian\s+paints?\b'
+  WIPRO.NS:
+    symbol: "WIPRO"
+    patterns:
+      - '(?i)\bwipro(?:\s+enterprises)?\b'
+  NTPC.NS:
+    symbol: "NTPC"
+    patterns:
+      - '(?i)\bntpc(?:\s+limited)?\b'
+  ONGC.NS:
+    symbol: "ONGC"
+    patterns:
+      - '(?i)\boil\s+(?:&|and)\s+natural\s+gas\s+corp(?:oration)?\b'
+      - '(?i)\bongc\b'

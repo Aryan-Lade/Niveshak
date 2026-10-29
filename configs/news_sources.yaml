@@ -1,0 +1,25 @@
+# RSS News Sources for Indian Financial Equities
+# Terms of Use: Ingestion extracts strictly headline, summary, and article URL.
+# No paywalled content or full-text scraping of protected pages.
+
+news_sources:
+  - name: "Moneycontrol Markets"
+    url: "https://www.moneycontrol.com/rss/MCtopnews.xml"
+    enabled: true
+  - name: "Economic Times Markets"
+    url: "https://economictimes.indiatimes.com/markets/rssfeeds/1977021501.cms"
+    enabled: true
+  - name: "Livemint Companies"
+    url: "https://www.livemint.com/rss/companies"
+    enabled: true
+  - name: "Business Standard Finance"
+    url: "https://www.business-standard.com/rss/finance-103.rss"
+    enabled: true
+  - name: "NSE Corporate Announcements"
+    url: "https://nsearchives.nseindia.com/corporate/announcements.xml"
+    enabled: false  # Official corporate feed stub
+
+ingest_settings:
+  poll_interval_minutes: 30
+  dedupe_title_similarity_threshold: 0.85
+  max_articles_per_feed: 50
