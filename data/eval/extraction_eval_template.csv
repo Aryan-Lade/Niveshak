@@ -1,0 +1,42 @@
+doc_id,ticker,headline,true_sentiment,true_event_type,true_surprise
+art_001,RELIANCE.NS,Reliance Q3 consolidated net profit rises 11% to Rs 18500 crore,1.0,earnings,positive
+art_002,TCS.NS,TCS expands strategic partnership with UK retail giant for cloud transformation,0.8,product,positive
+art_003,HDFCBANK.NS,HDFC Bank deposits grow 15% year-on-year following merger,0.6,earnings,positive
+art_004,INFY.NS,Infosys narrows full-year revenue growth guidance amid cautious client spending,-0.4,guidance,negative
+art_005,ICICIBANK.NS,ICICI Bank net profit climbs 14% on robust loan disbursement,0.9,earnings,positive
+art_006,SBIN.NS,State Bank of India reports multi-quarter low in gross NPA ratios,0.7,earnings,positive
+art_007,BHARTIARTL.NS,Bharti Airtel posts 25% surge in mobile ARPU following tariff hike,0.8,regulatory,positive
+art_008,LT.NS,Larsen & Toubro bags mega offshore order exceeding Rs 7000 crore,0.9,product,positive
+art_009,KOTAKBANK.NS,RBI approves new Managing Director and CEO appointment for Kotak Bank,0.3,management_change,neutral
+art_010,ITC.NS,ITC board recommends 1:10 hotel business demerger ratio,0.5,mna,neutral
+art_011,HINDUNILVR.NS,Hindustan Unilever reports flat quarterly volumes due to rural slowdown,-0.3,earnings,negative
+art_012,AXISBANK.NS,Axis Bank completes integration of Citibank India retail business,0.4,mna,neutral
+art_013,BAJFINANCE.NS,Bajaj Finance quarterly customer additions cross record 3.8 million,0.7,product,positive
+art_014,MARUTI.NS,Maruti Suzuki vehicle sales rise 8% year-on-year led by SUV portfolio,0.6,product,positive
+art_015,SUNPHARMA.NS,US FDA issues inspection classification of VAI for Sun Pharma plant,0.5,regulatory,positive
+art_016,TITAN.NS,Titan reports 20% revenue jump in jewelry division during festive quarter,0.8,earnings,positive
+art_017,ASIANPAINT.NS,Asian Paints operating margins contract by 180 bps on raw material inflation,-0.5,earnings,negative
+art_018,WIPRO.NS,Wipro CEO steps down unexpectedly; board appoints veteran insider,-0.4,management_change,negative
+art_019,NTPC.NS,NTPC Green Energy files draft papers for Rs 10000 crore public issue,0.5,mna,neutral
+art_020,ONGC.NS,ONGC commences first oil production from Krishna Godavari deepwater block,0.8,product,positive
+art_021,RELIANCE.NS,Reliance Retail acquires local footwear manufacturer for Rs 450 crore,0.4,mna,neutral
+art_022,TCS.NS,TCS workforce headcount declines for third consecutive quarter,-0.3,earnings,negative
+art_023,HDFCBANK.NS,HDFC Bank raises Rs 15000 crore via Tier II infrastructure bonds,0.3,macro,neutral
+art_024,INFY.NS,Infosys signs 10-year artificial intelligence partnership with European telecom,0.7,product,positive
+art_025,ICICIBANK.NS,ICICI Bank board approves dividend of Rs 10 per equity share,0.6,dividend_buyback,positive
+art_026,SBIN.NS,State Bank of India hikes benchmark lending rate (MCLR) by 10 bps,0.2,macro,neutral
+art_027,BHARTIARTL.NS,Bharti Airtel pre-pays Rs 8000 crore spectrum dues to telecom department,0.4,regulatory,neutral
+art_028,LT.NS,L&T Construction wins major high-speed rail viaduct order,0.8,product,positive
+art_029,KOTAKBANK.NS,Kotak Mahindra Bank acquires microfinance firm Sonata Finance,0.5,mna,neutral
+art_030,ITC.NS,Government disinvests 1.5% stake in ITC via block deals,-0.2,regulatory,neutral
+art_031,HINDUNILVR.NS,HUL announces price cuts across key soap and detergent brands,0.1,product,neutral
+art_032,AXISBANK.NS,Axis Bank reports 12% rise in credit card spends in festive period,0.6,product,positive
+art_033,BAJFINANCE.NS,RBI lifts restrictions on Bajaj Finance eCOM and Insta EMI card issuance,0.9,regulatory,positive
+art_034,MARUTI.NS,Maruti Suzuki announces new production plant in Haryana with Rs 18000 cr capex,0.7,product,positive
+art_035,SUNPHARMA.NS,Sun Pharma receives final approval for generic eye drops from US FDA,0.6,product,positive
+art_036,TITAN.NS,Titan opens 45 new retail stores across Tanishq and Mia banners,0.5,product,positive
+art_037,ASIANPAINT.NS,Asian Paints commissions new water-based manufacturing facility,0.4,product,neutral
+art_038,WIPRO.NS,Wipro secures multi-million dollar cloud modernisation deal with healthcare firm,0.6,product,positive
+art_039,NTPC.NS,NTPC achieves highest ever annual power generation of 422 billion units,0.7,product,positive
+art_040,ONGC.NS,Crude oil realization softens to $74 per barrel for ONGC,-0.3,macro,negative
+
