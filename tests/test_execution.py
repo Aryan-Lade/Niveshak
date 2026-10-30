@@ -168,3 +168,4 @@ def test_simulated_5_day_trading_run(tmp_path):
         cur = conn.cursor()
         cur.execute("SELECT COUNT(*) FROM equity_snapshots")
         assert cur.fetchone()[0] == 5
+

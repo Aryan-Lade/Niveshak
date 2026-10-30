@@ -113,3 +113,4 @@ class KillSwitch:
                 "tripped_at": row[2],
                 "reset_at": row[3],
             }
+

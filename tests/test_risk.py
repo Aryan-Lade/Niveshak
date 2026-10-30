@@ -246,3 +246,4 @@ def test_risk_engine_full_evaluation_flow(tmp_path):
     assert decision_full.approved is False
     assert decision_full.approved_qty == 0
     assert any("Max positions reached: 5/5" in r for r in decision_full.reasons)
+

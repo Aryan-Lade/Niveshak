@@ -427,3 +427,4 @@ class PaperBroker(BrokerAdapter):
 
         logger.info(f"[{as_of_date}] Equity Snapshot: Cash INR {cash:,.2f}, Positions INR {pos_val:,.2f}, Total INR {total_equity:,.2f}")
         return total_equity
+

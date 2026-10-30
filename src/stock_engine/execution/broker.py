@@ -119,3 +119,4 @@ class BrokerAdapter(ABC):
     def get_cash(self) -> float:
         """Fetch available unencumbered cash balance in INR."""
         pass
+

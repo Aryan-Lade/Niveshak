@@ -169,3 +169,4 @@ class DailyTradingRunner:
             "cash": self.broker.get_cash(),
             "status": "COMPLETED",
         }
+
