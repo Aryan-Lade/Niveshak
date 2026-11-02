@@ -1,6 +1,25 @@
+# Risk Management Engine Configuration
+# Non-negotiable capital protection parameters (Day 23)
+
 risk:
-  max_position_size: 0.05  
-  max_sector_exposure: 0.25
-  max_drawdown_limit: 0.15
-  var_limit: 0.05    
-  leverage_limit: 1.0
+  # Position sizing: risk_per_trade_pct of total equity / (k * ATR)
+  risk_per_trade_pct: 0.01          # 1% equity risk per trade
+  atr_multiplier: 2.0               # k multiplier for stop distance = k * ATR
+
+  # Portfolio allocation constraints
+  max_positions: 5                  # Maximum simultaneous open positions
+  max_weight_per_stock: 0.20        # 20% max portfolio equity per stock
+
+  # Loss and circuit breaker limits
+  daily_loss_limit_pct: -0.02       # -2% of start-of-day equity halts new entries
+  drawdown_circuit_breaker_pct: -0.10  # -10% from equity peak trips hard kill switch
+
+  # Liquidity and execution sanity filters
+  min_avg_daily_traded_value_inr: 50000000.0  # Min 5 Crore daily traded value
+  price_sanity_band_pct: 0.05       # Intended entry within +/- 5% of prior close
+
+  # Macro volatility and news event risk gates
+  max_vix_zscore: 2.5               # Skip entries if VIX z-score > 2.5
+  news_risk_sentiment_threshold: -0.70  # Sentiment <= -0.7 flags news risk
+  news_risk_confidence_threshold: 0.70 # Extraction confidence >= 0.70
+  auto_exit_on_news_risk: false     # Produce REVIEW flag (manual review by default)
