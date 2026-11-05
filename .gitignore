@@ -9,6 +9,6 @@ dist/
 build/
 mlruns/
 logs/
-data_store/news.db
-data_store/chroma/
+data_store/
+*.db
 temp.py
