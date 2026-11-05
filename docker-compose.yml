@@ -1,0 +1,73 @@
+version: "3.8"
+
+services:
+  # 1. FastAPI REST Backend
+  api:
+    build: .
+    container_name: niveshak_api
+    ports:
+      - "8000:8000"
+    environment:
+      - API_KEY=${API_KEY:-test-api-key}
+      - LLM_BASE_URL=http://host.docker.internal:11434
+      - LIVE_TRADING=false
+    volumes:
+      - ./data_store:/app/data_store
+      - ./reports:/app/reports
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # 2. Streamlit Multi-Page Dashboard
+  dashboard:
+    build: .
+    container_name: niveshak_dashboard
+    command: ["streamlit", "run", "src/stock_engine/dashboard/app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+    ports:
+      - "8501:8501"
+    environment:
+      - API_URL=http://api:8000
+      - API_KEY=${API_KEY:-test-api-key}
+    volumes:
+      - ./data_store:/app/data_store
+      - ./reports:/app/reports
+    depends_on:
+      - api
+    restart: unless-stopped
+
+  # 3. Automated Daily Quant Scheduler
+  scheduler:
+    build: .
+    container_name: niveshak_scheduler
+    command: ["python", "-c", "from stock_engine.ops.scheduler import create_niveshak_scheduler; import time; s = create_niveshak_scheduler(start_scheduler=True); time.sleep(1e9)"]
+    environment:
+      - TZ=Asia/Kolkata
+      - API_KEY=${API_KEY:-test-api-key}
+    volumes:
+      - ./data_store:/app/data_store
+      - ./reports:/app/reports
+    depends_on:
+      - api
+    restart: unless-stopped
+
+  # 4. Local MLflow Experiment Tracking Server
+  mlflow:
+    build: .
+    container_name: niveshak_mlflow
+    command: ["mlflow", "server", "--host", "0.0.0.0", "--port", "5000", "--backend-store-uri", "sqlite:////app/data_store/mlflow.db", "--default-artifact-root", "/app/mlruns"]
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./data_store:/app/data_store
+      - ./mlruns:/app/mlruns
+    restart: unless-stopped
+
+# =========================================================================
+# Notes:
+# - Ollama runs on host machine as an external service at http://localhost:11434
+#   (containers access it via host.docker.internal:11434).
+# =========================================================================
+
