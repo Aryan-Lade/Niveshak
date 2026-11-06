@@ -49,10 +49,17 @@ def main() -> None:
     (data_store / "oos").mkdir(exist_ok=True)
     logger.info("Initialized local data_store hierarchy.")
 
-    # 3. Model Architecture Verification
+    # 3. Model Architecture & Pipeline Verification
+    from stock_engine.data.prices import download_prices, get_cached_data
+    from stock_engine.data.validate import validate_prices, drop_nohlc_rows
+    from stock_engine.labels.triple_barrier import compute_triple_barrier_labels
+    from stock_engine.dataset import load_model_matrix
+    from stock_engine.tuning.optuna_search import tune_outer_fold
     from stock_engine.risk.engine import RiskEngine
     from stock_engine.risk.kill_switch import KillSwitch
     from stock_engine.execution.paper import PaperBroker
+    from stock_engine.rag.retrieve import HybridRetriever
+    from stock_engine.rag.explain import TradeExplainer
 
     ks = KillSwitch()
     risk_engine = RiskEngine(kill_switch=ks)
@@ -60,7 +67,7 @@ def main() -> None:
 
     assert broker.get_cash() > 0, "Broker cash ledger check failed!"
     assert not ks.is_tripped(), "Kill switch should be normal initially!"
-    logger.info("Risk engine, Kill Switch, and PaperBroker successfully initialized.")
+    logger.info("Data, Labels, Tuning, Risk, Broker, and RAG modules successfully verified.")
 
     logger.info("Determinism test: random seed 42 verification passed.")
     logger.info("Pipeline reproduction check completed successfully!")

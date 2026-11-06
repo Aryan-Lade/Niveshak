@@ -34,3 +34,17 @@ lgbm:
   n_jobs: -1
   verbose: -1
   early_stopping_rounds: 50
+
+# Optuna tuning configuration (Day 13)
+tuning:
+  n_trials: 30
+  n_inner_splits: 3
+  seed: 42
+  search_space:
+    learning_rate: [0.01, 0.15]
+    num_leaves: [15, 63]
+    min_child_samples: [10, 50]
+    subsample: [0.6, 1.0]
+    colsample_bytree: [0.6, 1.0]
+    reg_alpha: [0.001, 10.0]
+    reg_lambda: [0.001, 10.0]
