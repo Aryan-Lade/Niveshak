@@ -19,13 +19,14 @@ if str(project_root) not in sys.path:
 
 logger = logging.getLogger(__name__)
 
-CONFIG_DIR = Path("stock-engine/configs")
+CONFIG_DIR = Path("configs") if Path("configs").exists() else Path("stock-engine/configs")
 
 
-def load_model_config() -> Dict:
+def load_model_config(config_dir: Optional[Path] = None) -> Dict:
     """Load model configuration from YAML file."""
-    config_path = CONFIG_DIR / "model.yaml"
-    with open(config_path, 'r') as f:
+    c_dir = Path(config_dir) if config_dir else CONFIG_DIR
+    config_path = c_dir / "model.yaml"
+    with open(config_path, 'r', encoding='utf-8') as f:
         config = yaml.safe_load(f)
     return config['model']
 
@@ -47,7 +48,9 @@ class PurgedWalkForwardCV:
                  step_months: int = None,
                  purge_days: int = None,
                  embargo_days: int = None,
-                 label_period_days: int = None):
+                 label_period_days: int = None,
+                 config_dir: Optional[Path] = None):
+        self.config_dir = config_dir
         """
         Initialize the purged walk-forward CV.
 
