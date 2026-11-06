@@ -6,5 +6,8 @@ data:
   holdout_start: "2025-10-01"
   # Horizon days for labels (e.g., 5 for next week)
   horizon_days: 5
+  # Multipliers for volatility-scaled barriers (Day 6)
+  k_up: 1.5
+  k_dn: 1.0
   # Random seed for reproducibility
   seed: 42
