@@ -89,6 +89,50 @@ def get_health() -> HealthResponse:
     )
 
 
+@app.get("/healthz", tags=["System"])
+def get_healthz() -> Dict[str, Any]:
+    """Deep production health check probe."""
+    from stock_engine.monitoring.metrics import check_system_health
+    return check_system_health(trading_db_path=DB_PATH)
+
+
+@app.get("/metrics", tags=["System"])
+def get_prometheus_metrics():
+    """Prometheus exposition format operational metrics."""
+    from fastapi.responses import PlainTextResponse
+    from stock_engine.monitoring.metrics import generate_prometheus_metrics
+
+    # Fetch live metrics from paper broker if DB exists
+    nav = 1_000_000.0
+    cash = 1_000_000.0
+    drawdown = 0.0
+    ks_tripped = False
+    trade_count = 0
+
+    try:
+        broker = PaperBroker(db_path=DB_PATH)
+        nav = float(broker.get_nav())
+        cash = float(broker.get_cash())
+        trade_count = len(broker.get_trades())
+    except Exception:
+        pass
+
+    try:
+        ks = KillSwitch()
+        ks_tripped = ks.is_tripped()
+    except Exception:
+        pass
+
+    text_metrics = generate_prometheus_metrics(
+        portfolio_nav=nav,
+        cash_balance=cash,
+        active_drawdown_pct=drawdown,
+        kill_switch_tripped=ks_tripped,
+        trade_count=trade_count,
+    )
+    return PlainTextResponse(content=text_metrics, media_type="text/plain; version=0.0.4")
+
+
 @app.get("/signals/latest", response_model=SignalsResponse, tags=["Signals"])
 def get_latest_signals() -> SignalsResponse:
     """Fetch the latest calibrated signals and model inferences."""
