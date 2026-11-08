@@ -1,0 +1,13 @@
+# Production Alerts & Webhook Configuration
+alerts:
+  enabled: true
+  webhook_url: ""                # Set via SLACK_WEBHOOK_URL or DISCORD_WEBHOOK_URL env var
+  cooldown_seconds: 300          # Min interval between repeated alerts of same type
+  channels:
+    log: true
+    webhook: false
+  events:
+    kill_switch_tripped: true
+    circuit_breaker_tripped: true
+    drift_detected: true
+    drawdown_breach: true
