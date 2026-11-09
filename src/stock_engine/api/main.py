@@ -15,7 +15,7 @@ import sqlite3
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from fastapi import Depends, FastAPI, HTTPException, Header, Query, status
+from fastapi import Depends, FastAPI, HTTPException, Header, Query, WebSocket, WebSocketDisconnect, status
 from fastapi.middleware.cors import CORSMiddleware
 
 from stock_engine.api.schemas import (
@@ -435,3 +435,22 @@ def explain_trade(
         cited_doc_ids=result.cited_doc_ids,
         disclaimer=result.disclaimer,
     )
+
+
+@app.websocket("/ws/ticks/{ticker}")
+async def websocket_ticks(websocket: WebSocket, ticker: str):
+    """
+    WebSocket endpoint streaming simulated live NSE tick data and 5-level market depth.
+    """
+    await websocket.accept()
+    from stock_engine.execution.feed import MarketTickSimulator
+    simulator = MarketTickSimulator(ticker=ticker, tick_interval_sec=0.5)
+
+    try:
+        async for tick in simulator.stream_ticks(max_ticks=200):
+            await websocket.send_json(tick)
+    except WebSocketDisconnect:
+        logger.info(f"WebSocket client disconnected for {ticker}")
+    except Exception as e:
+        logger.warning(f"WebSocket tick stream closed for {ticker}: {e}")
+
