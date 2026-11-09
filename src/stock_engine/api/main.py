@@ -34,12 +34,16 @@ from stock_engine.api.schemas import (
     PositionsResponse,
     ResetRequest,
     RiskStatusResponse,
+    RebalanceOrderItem,
+    RebalancePlanRequest,
+    RebalancePlanResponse,
     SignalItem,
     SignalsResponse,
     TradeItem,
     TradesResponse,
 )
 from stock_engine.execution.paper import PaperBroker
+from stock_engine.execution.rebalance import PortfolioRebalancer
 from stock_engine.execution.runner import DailyTradingRunner
 from stock_engine.rag.explain import TradeContext, TradeExplainer
 from stock_engine.rag.llm import MockDeterministicLLMClient
@@ -434,6 +438,55 @@ def explain_trade(
         what_would_change_view=result.what_would_change_view,
         cited_doc_ids=result.cited_doc_ids,
         disclaimer=result.disclaimer,
+    )
+
+
+@app.post("/portfolio/rebalance-plan", response_model=RebalancePlanResponse, tags=["Portfolio"])
+def plan_portfolio_rebalance(
+    req: RebalancePlanRequest,
+    _auth: str = Depends(verify_api_key),
+) -> RebalancePlanResponse:
+    """
+    Generate target-weight rebalance plan based on current paper holdings and target weights.
+    """
+    broker = PaperBroker(db_path=DB_PATH)
+    current_cash = broker.get_cash()
+    current_positions = {p.ticker: p.quantity for p in broker.get_positions()}
+
+    market_prices = req.market_prices or {}
+    for ticker in list(req.target_weights.keys()) + list(current_positions.keys()):
+        if ticker not in market_prices or market_prices[ticker] <= 0:
+            market_prices[ticker] = 1000.0
+
+    rebalancer = PortfolioRebalancer()
+    plan = rebalancer.plan_rebalance(
+        current_positions=current_positions,
+        market_prices=market_prices,
+        target_weights=req.target_weights,
+        cash=current_cash,
+    )
+
+    order_items = [
+        RebalanceOrderItem(
+            ticker=o.ticker,
+            action=o.action,
+            current_shares=o.current_shares,
+            target_shares=o.target_shares,
+            delta_shares=o.delta_shares,
+            estimated_price=o.estimated_price,
+            trade_value=o.trade_value,
+            total_cost_inr=o.estimated_cost.total,
+        )
+        for o in plan.orders
+    ]
+
+    return RebalancePlanResponse(
+        nav=plan.nav,
+        cash_available=plan.cash_available,
+        cash_after_rebalance=plan.cash_after_rebalance,
+        orders=order_items,
+        total_estimated_costs_inr=plan.total_estimated_costs_inr,
+        turnover_inr=plan.turnover_inr,
     )
 
 

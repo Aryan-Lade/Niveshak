@@ -157,3 +157,28 @@ class ExplainResponse(BaseModel):
     cited_doc_ids: List[str]
     disclaimer: str
 
+
+class RebalanceOrderItem(BaseModel):
+    ticker: str
+    action: str
+    current_shares: int
+    target_shares: int
+    delta_shares: int
+    estimated_price: float
+    trade_value: float
+    total_cost_inr: float
+
+
+class RebalancePlanRequest(BaseModel):
+    target_weights: Dict[str, float]
+    market_prices: Optional[Dict[str, float]] = None
+
+
+class RebalancePlanResponse(BaseModel):
+    nav: float
+    cash_available: float
+    cash_after_rebalance: float
+    orders: List[RebalanceOrderItem]
+    total_estimated_costs_inr: float
+    turnover_inr: float
+
