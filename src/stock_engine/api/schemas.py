@@ -182,3 +182,21 @@ class RebalancePlanResponse(BaseModel):
     total_estimated_costs_inr: float
     turnover_inr: float
 
+
+class CopilotOverlayResponse(BaseModel):
+    ticker: str
+    timestamp: str
+    direction: str
+    confidence_pct: float
+    current_price: float
+    entry_price: float
+    target_1: float
+    target_2: float
+    stop_loss: float
+    risk_reward_ratio: float
+    pattern_detected: str
+    regime: str
+    signals: Dict[str, Any]
+    broker_compatibility: List[str]
+
+

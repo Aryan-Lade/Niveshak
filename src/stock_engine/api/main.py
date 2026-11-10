@@ -37,11 +37,13 @@ from stock_engine.api.schemas import (
     RebalanceOrderItem,
     RebalancePlanRequest,
     RebalancePlanResponse,
+    CopilotOverlayResponse,
     SignalItem,
     SignalsResponse,
     TradeItem,
     TradesResponse,
 )
+from stock_engine.copilot.intraday import IntradayCopilotScanner
 from stock_engine.execution.paper import PaperBroker
 from stock_engine.execution.rebalance import PortfolioRebalancer
 from stock_engine.execution.runner import DailyTradingRunner
@@ -487,6 +489,32 @@ def plan_portfolio_rebalance(
         orders=order_items,
         total_estimated_costs_inr=plan.total_estimated_costs_inr,
         turnover_inr=plan.turnover_inr,
+    )
+
+
+@app.get("/api/v1/copilot/overlay/{ticker}", response_model=CopilotOverlayResponse, tags=["Copilot"])
+def get_copilot_overlay(ticker: str) -> CopilotOverlayResponse:
+    """
+    Real-time intraday pattern scanner and directional UP/DOWN prediction
+    for live broker chart overlays (Groww, Angel One, TradingView, Zerodha).
+    """
+    scanner = IntradayCopilotScanner()
+    pred = scanner.analyze_ticker(ticker=ticker)
+    return CopilotOverlayResponse(
+        ticker=pred.ticker,
+        timestamp=pred.timestamp,
+        direction=pred.direction,
+        confidence_pct=pred.confidence_pct,
+        current_price=pred.current_price,
+        entry_price=pred.entry_price,
+        target_1=pred.target_1,
+        target_2=pred.target_2,
+        stop_loss=pred.stop_loss,
+        risk_reward_ratio=pred.risk_reward_ratio,
+        pattern_detected=pred.pattern_detected,
+        regime=pred.regime,
+        signals=pred.signals,
+        broker_compatibility=pred.broker_compatibility,
     )
 
 
