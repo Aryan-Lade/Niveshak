@@ -25,3 +25,4 @@ document.getElementById("scan-btn").addEventListener("click", async () => {
     resultEl.innerHTML = `<span style="color:#f87171;">Engine offline or connection error. Ensure FastAPI is running on port 8000.</span>`;
   }
 });
+

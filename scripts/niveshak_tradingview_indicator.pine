@@ -63,3 +63,4 @@ barcolor(close > inst_vwap ? (close > orb_high ? #10b981 : #38bdf8) : (close < o
 // --- 5. Alerts for Mobile Push Notifications ---
 alertcondition(bullish_signal, title="Niveshak UP Breakout", message="🟢 NIVESHAK ALERT: Bullish ORB Breakout on {{ticker}} above VWAP!")
 alertcondition(bearish_signal, title="Niveshak DOWN Breakdown", message="🔴 NIVESHAK ALERT: Bearish ORB Breakdown on {{ticker}} below VWAP!")
+

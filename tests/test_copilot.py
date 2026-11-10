@@ -50,3 +50,4 @@ def test_copilot_api_endpoint_short_ticker(client):
     assert resp.status_code == 200
     data = resp.json()
     assert data["ticker"] == "INFY.NS"
+

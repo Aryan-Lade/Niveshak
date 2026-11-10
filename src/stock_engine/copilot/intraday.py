@@ -226,3 +226,4 @@ class IntradayCopilotScanner:
             "close": price_series,
             "volume": volumes,
         })
+

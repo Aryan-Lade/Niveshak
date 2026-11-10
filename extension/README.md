@@ -28,3 +28,4 @@ A real-time AI trading copilot that injects live **UP / DOWN** predictions, targ
    - Win Probability % (e.g. `74%`)
    - Target 1 (R1) & Stop-Loss (1% ATR Risk)
    - Real-time VWAP and Opening Range Breakout status.
+

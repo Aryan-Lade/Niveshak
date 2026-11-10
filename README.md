@@ -71,11 +71,12 @@ flowchart TD
         D3["💰 Realistic Transaction Costs\nBrokerage · STT · Exchange · Stamp Duty\nGST · DP Charges · Slippage"]:::risk
     end
 
-    subgraph EXEC["🚀 EXECUTION, INTERFACES & MONITORING"]
+    subgraph EXEC["🚀 EXECUTION, INTERFACES & COPILOT"]
         E1["📝 PaperBroker Simulator\nNext-Open Execution\nSQLite Trade Ledger"]:::exec
         E2["⚡ FastAPI Backend\nAsync REST Endpoints\nKey Auth · OpenAPI Docs"]:::exec
         E3["🖥️ Streamlit Multi-Page UI\nSignals · Portfolio · SHAP Insights\nRAG Evidence · Risk Controls"]:::exec
         E4["📡 Drift & Ops Monitor\nPSI · KS-Test · Rolling Sharpe\nAPScheduler Daily Automation"]:::exec
+        E5["⚡ Live Broker HUD & Copilot\nGroww · Angel One · TradingView\nManifest V3 Extension · Pine Script"]:::exec
     end
 
     A1 --> A4
@@ -101,6 +102,7 @@ flowchart TD
     E1 --> E2
     E2 --> E3
     E1 --> E4
+    E2 --> E5
 
     classDef data   fill:#1a2b4c,stroke:#3b82f6,color:#e0edff,font-weight:bold
     classDef feat   fill:#163832,stroke:#10b981,color:#d1fae5,font-weight:bold
@@ -428,7 +430,63 @@ Niveshak/
 
 ---
 
-## 10. Quickstart Guide
+## 10. Live Day-Trader Copilot, Broker Chart Overlays & TradingView Engine
+
+Niveshak features a modular real-time intraday copilot inspired by modern day-trading desk architectures, engineered natively for Indian equities (NSE / NIFTY 50). It enables traders to see live directional forecasts (**🟢 UP / 🔴 DOWN**) directly over live charts on **Groww**, **Angel One**, and **TradingView**.
+
+```mermaid
+flowchart TD
+    subgraph ENGINE["🧠 INTRADAY SCANNER ENGINE"]
+        A["15m Opening Range (ORB-15)\nHigh / Low Channels"]
+        B["Institutional VWAP\nCumulative Typical Price * Volume"]
+        C["Volume Surge Detector\nV > 1.3x 20-bar Average"]
+        D["Multi-Factor Scoring\nDirection · Confidence · Win Rate"]
+        A --> D
+        B --> D
+        C --> D
+    end
+
+    subgraph API["⚡ FASTAPI COPILOT ENDPOINT"]
+        E["GET /api/v1/copilot/overlay/{ticker}\nSub-second Latency JSON Payload"]
+        D --> E
+    end
+
+    subgraph INTERFACES["🖥️ VISUAL HUD & OVERLAYS"]
+        F1["💻 Chrome Extension (Manifest V3)\nDraggable Glassmorphism HUD\nGroww · Angel One · TradingView · Zerodha"]
+        F2["📈 TradingView Pine Script v5\nUniversal Indicator for Web & Mobile App\nDynamic Shapes · VWAP Bands · ATR Stops"]
+        F3["📊 Streamlit Terminal\nPage 9: Live Copilot Scanner"]
+        E --> F1
+        E --> F2
+        E --> F3
+    end
+```
+
+### 1. Intraday Pattern Scanner (`src/stock_engine/copilot/intraday.py`)
+- **Opening Range Breakout (ORB-15)**: Automatically identifies the first 15-minute price discovery boundaries and signals momentum expansions.
+- **Institutional VWAP Anchor**: Determines the volume-weighted institutional baseline to filter false breakouts.
+- **Dynamic Risk Sizing**: Automatically computes entry price, 1.0x ATR risk invalidation stop-loss, Target 1 (1.5x ATR), and Target 2 (2.5x ATR).
+
+### 2. Google Chrome Extension (Manifest V3)
+Located in `extension/`, this extension injects a sleek, draggable floating HUD badge directly on:
+- **Groww**: `groww.in/stocks/*`
+- **TradingView**: `tradingview.com/chart/*`
+- **Angel One**: `trade.angelone.in/*`
+- **Zerodha Kite**: `kite.zerodha.com/*`
+
+#### Quick Install (30 Seconds):
+1. Navigate to `chrome://extensions/` in Google Chrome.
+2. Toggle on **Developer mode** in the top right.
+3. Click **Load unpacked** and select the directory: `Niveshak/extension`.
+4. Open any stock chart on Groww or TradingView to view the live floating HUD badge!
+
+### 3. Universal TradingView Pine Script v5 Indicator
+Located in `scripts/niveshak_tradingview_indicator.pine`:
+- Production-ready Pine Script v5 indicator compatible with **TradingView Web, TradingView Mobile App, Groww Charts, and Angel One Charts**.
+- Automatically plots green `▲ UP` and red `▼ DOWN` breakout arrows, institutional VWAP, and dynamic ATR trailing stop bands directly on candlestick charts.
+
+---
+
+## 11. Quickstart Guide
 
 ### Prerequisites
 - Python 3.11+
@@ -487,7 +545,7 @@ streamlit run src/stock_engine/dashboard/app.py
 
 ---
 
-## 11. Regulatory & Compliance Notice
+## 12. Regulatory & Compliance Notice
 
 > [!CAUTION]  
 > **Educational & Research Disclaimer**  
