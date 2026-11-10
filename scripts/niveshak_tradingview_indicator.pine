@@ -1,0 +1,65 @@
+//@version=5
+indicator("Niveshak Multi-Regime Quant Copilot [NSE]", shorttitle="NIVESHAK", overlay=true)
+
+// ==============================================================================
+// NIVESHAK (निवेशक) — MULTIMODAL QUANT COPILOT PINE SCRIPT v5
+// For TradingView, Groww, and Angel One Web & Mobile Charting
+// ==============================================================================
+
+// --- Inputs ---
+orb_length = input.int(3, title="Opening Range Bars (5m x 3 = 15m)", minval=1)
+atr_period = input.int(14, title="ATR Length")
+atr_multiplier_sl = input.float(1.0, title="ATR Stop-Loss Multiplier")
+atr_multiplier_tp = input.float(1.8, title="ATR Target Multiplier")
+show_vwap = input.bool(true, title="Show Institutional VWAP")
+show_orb = input.bool(true, title="Show 15m Opening Range Bands")
+
+// --- 1. Institutional VWAP ---
+typical_price = hlc3
+var float sum_tp_vol = 0.0
+var float sum_vol = 0.0
+
+is_new_session = ta.change(time("D"))
+if is_new_session
+    sum_tp_vol := 0.0
+    sum_vol := 0.0
+
+sum_tp_vol += typical_price * volume
+sum_vol += volume
+inst_vwap = sum_vol > 0 ? sum_tp_vol / sum_vol : close
+
+plot(show_vwap ? inst_vwap : na, title="VWAP", color=color.new(#38bdf8, 0), linewidth=2)
+
+// --- 2. Opening Range Breakout (15-Minute ORB) ---
+var float orb_high = na
+var float orb_low = na
+var int bar_count = 0
+
+if is_new_session
+    bar_count := 1
+    orb_high := high
+    orb_low := low
+else
+    bar_count += 1
+    if bar_count <= orb_length
+        orb_high := math.max(orb_high, high)
+        orb_low := math.min(orb_low, low)
+
+plot(show_orb and bar_count > orb_length ? orb_high : na, title="ORB High", color=color.new(#10b981, 30), style=plot.style_linebr, linewidth=1)
+plot(show_orb and bar_count > orb_length ? orb_low : na, title="ORB Low", color=color.new(#ef4444, 30), style=plot.style_linebr, linewidth=1)
+
+// --- 3. Dynamic ATR Trailing Stops & Signals ---
+atr_val = ta.atr(atr_period)
+bullish_signal = ta.crossover(close, orb_high) and close > inst_vwap
+bearish_signal = ta.crossunder(close, orb_low) and close < inst_vwap
+
+// --- 4. Visual Chart Annotations (UP / DOWN Arrows) ---
+plotshape(bullish_signal, title="UP Signal", location=location.belowbar, color=color.new(#10b981, 0), style=shape.triangleup, size=size.normal, text="UP")
+plotshape(bearish_signal, title="DOWN Signal", location=location.abovebar, color=color.new(#ef4444, 0), style=shape.triangledown, size=size.normal, text="DOWN")
+
+// Color Candlesticks based on Trend Regimes
+barcolor(close > inst_vwap ? (close > orb_high ? #10b981 : #38bdf8) : (close < orb_low ? #ef4444 : #94a3b8))
+
+// --- 5. Alerts for Mobile Push Notifications ---
+alertcondition(bullish_signal, title="Niveshak UP Breakout", message="🟢 NIVESHAK ALERT: Bullish ORB Breakout on {{ticker}} above VWAP!")
+alertcondition(bearish_signal, title="Niveshak DOWN Breakdown", message="🔴 NIVESHAK ALERT: Bearish ORB Breakdown on {{ticker}} below VWAP!")

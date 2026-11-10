@@ -47,6 +47,7 @@ page = st.sidebar.radio(
         "6. Backtest & Baselines",
         "7. Risk Panel & Kill Switch",
         "8. Settings",
+        "9. Live Day-Trader Copilot",
     ],
 )
 
@@ -185,4 +186,66 @@ elif page == "8. Settings":
     st.text_input("Execution Mode", value="PAPER TRADING (Simulator)", disabled=True)
     st.checkbox("Live Trading Enabled (Requires LIVE_TRADING=true and Groww credentials)", value=False, disabled=True)
     st.write("All live execution safety guards are strictly enforced per SEBI retail algo guidelines.")
+
+elif page == "9. Live Day-Trader Copilot":
+    st.header("⚡ Live Day-Trader Copilot & Broker Chart Overlay")
+    st.caption("Live AI directional forecasting for Groww, Angel One, and TradingView charts.")
+
+    from stock_engine.copilot.intraday import IntradayCopilotScanner
+    scanner = IntradayCopilotScanner()
+
+    c_sym, c_btn = st.columns([3, 1])
+    with c_sym:
+        sym = st.selectbox("Select Active Stock Ticker", ["RELIANCE.NS", "TCS.NS", "INFY.NS", "HDFCBANK.NS", "ICICIBANK.NS"])
+    with c_btn:
+        st.write("")
+        st.write("")
+        scan_now = st.button("Scan Chart Patterns", type="primary")
+
+    pred = scanner.analyze_ticker(sym)
+
+    # Copilot Glassmorphism HUD Card
+    is_up = pred.direction == "UP"
+    is_down = pred.direction == "DOWN"
+    badge_color = "#10b981" if is_up else ("#ef4444" if is_down else "#94a3b8")
+    badge_label = "▲ STRONG UP (BULLISH BREAKOUT)" if is_up else ("▼ STRONG DOWN (BEARISH BREAKDOWN)" if is_down else "■ CONSOLIDATION")
+
+    st.markdown(f"""
+        <div style="background: rgba(15, 23, 42, 0.95); border: 2px solid {badge_color}; border-radius: 12px; padding: 18px 24px; margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <span style="font-size: 18px; font-weight: bold; color: {badge_color};">{badge_label}</span>
+                <span style="background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 6px; font-weight: 700;">{pred.confidence_pct}% Win Probability</span>
+            </div>
+            <div style="font-size: 14px; color: #cbd5e1; margin-bottom: 14px;">
+                🎯 <strong>Detected Pattern</strong>: {pred.pattern_detected}
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
+                <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;">
+                    <div style="font-size: 11px; color: #94a3b8;">CURRENT PRICE</div>
+                    <div style="font-size: 16px; font-weight: bold;">₹ {pred.current_price}</div>
+                </div>
+                <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;">
+                    <div style="font-size: 11px; color: #10b981;">TARGET 1 (R1)</div>
+                    <div style="font-size: 16px; font-weight: bold; color: #10b981;">₹ {pred.target_1}</div>
+                </div>
+                <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;">
+                    <div style="font-size: 11px; color: #ef4444;">STOP-LOSS</div>
+                    <div style="font-size: 16px; font-weight: bold; color: #ef4444;">₹ {pred.stop_loss}</div>
+                </div>
+                <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;">
+                    <div style="font-size: 11px; color: #38bdf8;">RISK:REWARD</div>
+                    <div style="font-size: 16px; font-weight: bold; color: #38bdf8;">{pred.risk_reward_ratio}:1</div>
+                </div>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+
+    # Technical Depth Indicators
+    col_v1, col_v2, col_v3 = st.columns(3)
+    col_v1.metric("Institutional VWAP", f"₹ {pred.signals['vwap']}")
+    col_v2.metric("15-Min ORB High", f"₹ {pred.signals['orb_high']}")
+    col_v3.metric("Volume Surge Ratio", f"{pred.signals['volume_surge_ratio']}x")
+
+    st.info("💡 **Live Broker Integration**: Install the Chrome extension in `extension/` or add the Pine Script in `scripts/niveshak_tradingview_indicator.pine` to see this HUD live inside your Groww, Angel One, or TradingView chart!")
+
 
