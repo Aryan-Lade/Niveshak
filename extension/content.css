@@ -1,0 +1,153 @@
+/* Niveshak Quant Copilot Overlay Styling */
+
+#niveshak-hud-container {
+  position: fixed;
+  top: 80px;
+  right: 25px;
+  z-index: 9999999;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #ffffff;
+  user-select: none;
+}
+
+.niveshak-badge {
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5), 0 0 1px rgba(255, 255, 255, 0.2);
+  width: 290px;
+  padding: 14px 16px;
+  transition: all 0.2s ease-in-out;
+}
+
+.niveshak-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 8px;
+}
+
+.niveshak-brand {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #38bdf8;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.niveshak-ticker {
+  font-size: 12px;
+  font-weight: 600;
+  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.niveshak-signal-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.signal-up {
+  background: rgba(16, 185, 129, 0.18);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #34d399;
+}
+
+.signal-down {
+  background: rgba(239, 68, 68, 0.18);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #f87171;
+}
+
+.signal-neutral {
+  background: rgba(148, 163, 184, 0.15);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  color: #cbd5e1;
+}
+
+.niveshak-confidence {
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.niveshak-metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.niveshak-metric-box {
+  background: rgba(255, 255, 255, 0.04);
+  padding: 6px 8px;
+  border-radius: 6px;
+}
+
+.niveshak-metric-label {
+  font-size: 10px;
+  color: #94a3b8;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.niveshak-metric-val {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.val-green {
+  color: #34d399;
+}
+
+.val-red {
+  color: #f87171;
+}
+
+.niveshak-pattern {
+  font-size: 11px;
+  color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 6px 8px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.niveshak-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10px;
+  color: #64748b;
+}
+
+.niveshak-pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+  display: inline-block;
+  box-shadow: 0 0 8px #10b981;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}

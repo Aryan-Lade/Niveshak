@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "Niveshak Quant Copilot — Live Chart HUD",
+  "version": "1.0.0",
+  "description": "Real-time AI Quant Copilot overlay for Groww, Angel One, TradingView & Zerodha Kite charts.",
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
+  "host_permissions": [
+    "http://127.0.0.1:8000/*",
+    "http://localhost:8000/*",
+    "*://*.groww.in/*",
+    "*://*.tradingview.com/*",
+    "*://*.angelone.in/*",
+    "*://kite.zerodha.com/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Niveshak Quant Copilot"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.groww.in/stocks/*",
+        "*://*.tradingview.com/chart/*",
+        "*://*.angelone.in/*",
+        "*://kite.zerodha.com/*"
+      ],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}
