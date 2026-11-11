@@ -23,6 +23,8 @@
     {
       "matches": [
         "*://*.groww.in/stocks/*",
+        "*://*.groww.in/charts/*",
+        "*://*.groww.in/*",
         "*://*.tradingview.com/chart/*",
         "*://*.angelone.in/*",
         "*://kite.zerodha.com/*"

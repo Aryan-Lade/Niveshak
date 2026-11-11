@@ -12,15 +12,25 @@
     const url = window.location.href;
     let ticker = "RELIANCE.NS";
 
-    // 1. Groww URL parsing: groww.in/stocks/tata-consultancy-services-ltd -> TCS.NS
-    if (url.includes("groww.in/stocks/")) {
-      const parts = url.split("stocks/")[1].split("/")[0].split("?")[0];
-      if (parts.includes("reliance")) ticker = "RELIANCE.NS";
-      else if (parts.includes("tata-consultancy") || parts.includes("tcs")) ticker = "TCS.NS";
-      else if (parts.includes("hdfc-bank")) ticker = "HDFCBANK.NS";
-      else if (parts.includes("infosys") || parts.includes("infy")) ticker = "INFY.NS";
-      else if (parts.includes("icici")) ticker = "ICICIBANK.NS";
-      else ticker = parts.toUpperCase() + ".NS";
+    // 1. Groww URL & DOM parsing
+    if (url.includes("groww.in/")) {
+      const h1El = document.querySelector("h1");
+      const pageText = h1El ? h1El.textContent.toLowerCase() : "";
+      const urlLower = url.toLowerCase();
+
+      if (urlLower.includes("reliance") || pageText.includes("reliance")) ticker = "RELIANCE.NS";
+      else if (urlLower.includes("tata-consultancy") || urlLower.includes("tcs") || pageText.includes("tcs")) ticker = "TCS.NS";
+      else if (urlLower.includes("tata-motors") || pageText.includes("tata motors")) ticker = "TATAMOTORS.NS";
+      else if (urlLower.includes("hdfc-bank") || pageText.includes("hdfc bank")) ticker = "HDFCBANK.NS";
+      else if (urlLower.includes("infosys") || urlLower.includes("infy") || pageText.includes("infosys")) ticker = "INFY.NS";
+      else if (urlLower.includes("icici") || pageText.includes("icici")) ticker = "ICICIBANK.NS";
+      else if (urlLower.includes("state-bank") || urlLower.includes("sbi") || pageText.includes("state bank")) ticker = "SBIN.NS";
+      else if (urlLower.includes("bharti-airtel") || pageText.includes("airtel")) ticker = "BHARTIARTL.NS";
+      else if (urlLower.includes("itc") || pageText.includes("itc")) ticker = "ITC.NS";
+      else if (url.includes("groww.in/stocks/")) {
+        const parts = url.split("stocks/")[1].split("/")[0].split("?")[0];
+        ticker = parts.replace(/-ltd|-limited/g, "").toUpperCase() + ".NS";
+      }
     }
     // 2. TradingView symbol detection
     else if (url.includes("tradingview.com")) {
