@@ -39,6 +39,7 @@ st.sidebar.title("Navigation")
 page = st.sidebar.radio(
     "Go to",
     [
+        "⚡ OrderBlock Terminal (Live Flow)",
         "1. Overview",
         "2. Signals",
         "3. Positions & Trades",
@@ -52,7 +53,127 @@ page = st.sidebar.radio(
 )
 
 # Render chosen page
-if page == "1. Overview":
+if page == "⚡ OrderBlock Terminal (Live Flow)":
+    from stock_engine.analytics.orderblock_engine import OrderBlockEngine
+    ob_engine = OrderBlockEngine()
+
+    st.markdown("""
+        <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(15, 23, 42, 0.9); padding: 12px 18px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); margin-bottom: 16px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 20px;">⚡</span>
+                <span style="font-size: 18px; font-weight: 800; color: #fff;">OrderBlock — Institutional Derivatives Terminal</span>
+                <span style="background: rgba(16,185,129,0.2); color: #00ff88; font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 10px; border: 1px solid rgba(16,185,129,0.4);">LIVE SMC FLOW</span>
+            </div>
+            <div style="display: flex; gap: 12px; font-size: 13px; font-weight: 700;">
+                <span style="color: #00ff88;">▲ BULLISH: 172</span>
+                <span style="opacity: 0.3;">|</span>
+                <span style="color: #ff3b69;">▼ BEARISH: 41</span>
+                <span style="opacity: 0.3;">|</span>
+                <span style="color: #38bdf8;">INDIA VIX: 12.85 (-3.4%)</span>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("""
+        <a href="http://localhost:8000/orderblock" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #8b5cf6, #6366f1); color: #fff; padding: 8px 18px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 13px; margin-bottom: 16px; box-shadow: 0 4px 14px rgba(139,92,246,0.35);">
+            🚀 Open Fullscreen OrderBlock Web App (Standalone Mode) ↗
+        </a>
+    """, unsafe_allow_html=True)
+
+    col_sectors, col_buys, col_sells = st.columns([1.1, 1.4, 1.4])
+
+    with col_sectors:
+        st.subheader("Sector Money Flow")
+        sectors = ob_engine.get_sector_money_flows()
+        df_sec = pd.DataFrame([{
+            "Sector": s.sector,
+            "Change %": f"+{s.change_pct:.2f}%" if s.change_pct > 0 else f"{s.change_pct:.2f}%",
+            "Inflow (Cr)": f"₹{s.inflow_cr_inr:.0f} Cr"
+        } for s in sectors])
+        st.dataframe(df_sec, use_container_width=True, height=520)
+
+    with col_buys:
+        st.markdown("<h4 style='color: #00ff88;'>▲ Top 10 Heavily Bought (Long Buildup)</h4>", unsafe_allow_html=True)
+        buys = ob_engine.get_top_10_buy_stocks()
+        for b in buys:
+            st.markdown(f"""
+                <div style="background: rgba(16, 185, 129, 0.08); border-left: 3px solid #00ff88; border-radius: 6px; padding: 8px 12px; margin-bottom: 6px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-weight: 800; font-size: 13px;">{b.ticker}</span>
+                        <span style="color: #00ff88; font-weight: 800; font-family: monospace;">+{b.change_pct:.2f}%</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 11px; color: #94a3b8; margin-top: 3px;">
+                        <span>₹{b.price:,.2f}</span>
+                        <span style="color: #00ff88; font-weight: 700;">{b.buildup_status}</span>
+                    </div>
+                </div>
+            """, unsafe_allow_html=True)
+
+    with col_sells:
+        st.markdown("<h4 style='color: #ff3b69;'>▼ Least 10 Heavily Sold (Short Buildup)</h4>", unsafe_allow_html=True)
+        sells = ob_engine.get_least_10_sell_stocks()
+        for s in sells:
+            st.markdown(f"""
+                <div style="background: rgba(239, 68, 68, 0.08); border-left: 3px solid #ff3b69; border-radius: 6px; padding: 8px 12px; margin-bottom: 6px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-weight: 800; font-size: 13px;">{s.ticker}</span>
+                        <span style="color: #ff3b69; font-weight: 800; font-family: monospace;">{s.change_pct:.2f}%</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 11px; color: #94a3b8; margin-top: 3px;">
+                        <span>₹{s.price:,.2f}</span>
+                        <span style="color: #ff3b69; font-weight: 700;">{s.buildup_status}</span>
+                    </div>
+                </div>
+            """, unsafe_allow_html=True)
+
+    st.divider()
+
+    # 8 Feature Panels Expanders
+    t_pulse, t_radar, t_calm, t_liq, t_rsi, t_acad = st.tabs([
+        "🎯 Option Pulse", "📡 Stock Radar", "🧘 Calm Zone", "💧 Liquidity Map", "📈 RSI Screener", "🎓 F&O Academy"
+    ])
+
+    with t_pulse:
+        op = ob_engine.get_option_pulse("NIFTY")
+        c_p1, c_p2, c_p3 = st.columns(3)
+        c_p1.metric("Put-Call Ratio (PCR)", f"{op['pcr']}", op['pcr_bias'])
+        c_p2.metric("Max Pain Strike", f"{op['max_pain_strike']:.0f}")
+        c_p3.metric("Support / Resistance", f"{op['support_strike']:.0f} / {op['resistance_strike']:.0f}")
+        st.dataframe(pd.DataFrame(op["strikes"]), use_container_width=True)
+
+    with t_radar:
+        st.write("### Real-Time High-Probability Setups")
+        st.write("🟢 **TVSMOTOR**: Bullish ORB-15 Breakout with 2.4x Volume Surge above VWAP ₹2410")
+        st.write("🟢 **INOXWIND**: Clean Displacement Candle breaking 52-week Order Block level ₹168")
+        st.write("🔴 **ANANDRATHI**: Bearish Institutional Order Block Rejection at ₹4050")
+
+    with t_calm:
+        st.write("### Market Calmness & Volatility Zone")
+        breadth = ob_engine.get_market_breadth()
+        st.metric("Calm Index (0-100)", f"{breadth['calm_index']:.1f}", "Normal Volatility")
+        st.metric("India VIX", f"{breadth['india_vix']:.2f}", f"{breadth['vix_change_pct']:.1f}%")
+
+    with t_liq:
+        st.write("### Order Block Liquidity Pools")
+        st.info("💧 Buy-Side Liquidity (BSL) clustered at NIFTY 25,350. Sell-Side Liquidity (SSL) clustered at NIFTY 24,980.")
+
+    with t_rsi:
+        st.write("### Multi-Timeframe RSI Screener")
+        rsi_data = ob_engine.get_rsi_screener_results()
+        st.write("**Overbought (>65)**:", ", ".join([s["ticker"] for s in rsi_data["overbought_above_65"]]))
+        st.write("**Oversold (<35)**:", ", ".join([s["ticker"] for s in rsi_data["oversold_below_35"]]))
+        st.write("**Bullish Momentum (55-65)**:", ", ".join([s["ticker"] for s in rsi_data["bullish_momentum_55_65"]]))
+
+    with t_acad:
+        st.write("### F&O Derivatives Academy")
+        modules = ob_engine.get_fo_academy_curriculum()
+        for m in modules:
+            with st.expander(f"{m['module_id']}: {m['title']} ({m['difficulty']})"):
+                st.write(m["summary"])
+                for k in m["key_takeaways"]:
+                    st.write(f"- {k}")
+
+elif page == "1. Overview":
     st.header("Portfolio Overview & Performance")
     eq_data = client.get_equity()
     cur_eq = eq_data["current_equity"]

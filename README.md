@@ -486,7 +486,64 @@ Located in `scripts/niveshak_tradingview_indicator.pine`:
 
 ---
 
-## 11. Quickstart Guide
+## 11. OrderBlock Institutional Terminal & Live Market Flow Analyzer (`order-block.com` Architecture)
+
+Inspired by institutional order flow terminals like `order-block.com`, Niveshak features a dedicated, dark-themed institutional SMC and derivatives intelligence suite accessible either via a standalone full-screen web app or within the Streamlit command center.
+
+```mermaid
+flowchart LR
+    subgraph INFLOW["🌊 SECTOR CAPITAL VELOCITY"]
+        S1["21 NSE Sectors\nIT · NBFC · FMCG · Auto · Metal"]
+        S2["Flow Velocity % & Volume Profile"]
+        S1 --> S2
+    end
+
+    subgraph POC["⏳ POC LIQUIDITY GATE"]
+        P1["Volume Hourglass Profile"]
+        P2["Buy-Side vs Sell-Side Liquidity"]
+        S2 --> P1
+        P1 --> P2
+    end
+
+    subgraph CLUSTERS["⚡ SMC DERIVATIVES ENGINE"]
+        B1["▲ TOP 10 BUYS\nLong Buildup & Accumulation\nTVSMOTOR · INOXWIND · EICHERMOT"]
+        B2["▼ LEAST 10 SELLS\nShort Buildup & Distribution\nANANDRATHI · HINDPETRO · PAYTM"]
+        P2 --> B1
+        P2 --> B2
+    end
+
+    subgraph JOURNAL["📖 INSTITUTIONAL TRADING JOURNAL"]
+        J1["Net P&L Trajectory (Cumulative vs DD)"]
+        J2["8 KPI Cards: Win Rate · Profit Factor · Expectancy · Streak"]
+    end
+
+    B1 -.-> JOURNAL
+    B2 -.-> JOURNAL
+```
+
+### 8 Signature Features:
+1. **🌊 Money Flow**: Measures real-time sectoral capital velocity across 21 NSE industries (IT, Logistics, Cement, FMCG, Banking, etc.).
+2. **🎯 Option Pulse**: Visualizes NIFTY/BANKNIFTY Put-Call Ratio (PCR), Max Pain strike magnets, and strike-wise Call/Put writing walls.
+3. **📡 Stock Radar**: Live multi-timeframe scanner for Opening Range Breakouts (ORB-15), volume surges (>1.3x), and VWAP mean reversions.
+4. **🧘 Calm Zone**: Fear/volatility sentiment gauge driven by India VIX, regime classification, and advance-decline breadth (172 Bullish vs 41 Bearish).
+5. **💧 Liquidity Map**: Dynamic mapping of institutional order blocks, Buy-Side Liquidity (BSL), Sell-Side Liquidity (SSL), and Fair Value Gaps (FVG).
+6. **📊 OI Flow Matrix**: 4-quadrant derivatives price vs OI categorizer (Long Buildup, Short Covering, Short Buildup, Long Unwinding).
+7. **📈 RSI Screener**: Real-time momentum screener classifying stocks into Overbought (>65), Oversold (<35), and Bullish Continuation (55-65).
+8. **🎓 F&O Academy**: Quantitative curriculum covering Smart Money Concepts, Greeks, Volatility Surfaces, and 1% ATR position sizing.
+
+### 2 Primary Modes of Operation:
+- **Standalone OrderBlock Web Platform (`/orderblock`)**:
+  - Full-screen glassmorphic dark interface (`#070b13`) matching `order-block.com/app/orderblock`.
+  - Collapsible sidebar (`<<` / `>>`), search bar with `Ctrl + K` hotkey, live market open indicator, and user profile switcher.
+  - Interactive SVG money flow streamlines with central POC liquidity hourglass.
+  - Interactive **Trading Journal** with Net P&L dual chart (Cumulative P&L vs Drawdown) and 8 quantitative KPI metric cards.
+- **Top 10 Buy & Least 10 Sell Market Analyzer**:
+  - Instant ranking of the **Top 10 stocks undergoing aggressive institutional accumulation (Long Buildup)** with entry zones and S1/R1 levels.
+  - Instant ranking of the **Least 10 stocks undergoing aggressive institutional dumping (Short Buildup)** with distribution zones.
+
+---
+
+## 12. Quickstart Guide
 
 ### Prerequisites
 - Python 3.11+
@@ -532,20 +589,22 @@ Verify transaction cost calculations directly:
 python -m pytest tests/test_costs.py -v
 ```
 
-### 5. Launch the FastAPI Backend
+### 5. Launch the FastAPI Backend & OrderBlock Web App
 ```bash
 uvicorn src.stock_engine.api.main:app --reload --port 8000
 ```
-Interactive OpenAPI documentation will be accessible at `http://localhost:8000/docs`.
+- **OrderBlock Fullscreen Terminal**: `http://localhost:8000/orderblock` (or `http://localhost:8000/app`)
+- **Interactive OpenAPI Documentation**: `http://localhost:8000/docs`
 
 ### 6. Launch the Streamlit Dashboard
 ```bash
 streamlit run src/stock_engine/dashboard/app.py
 ```
+- **Dashboard Interface**: `http://localhost:8501` (Features page `⚡ OrderBlock Terminal (Live Flow)`)
 
 ---
 
-## 12. Regulatory & Compliance Notice
+## 13. Regulatory & Compliance Notice
 
 > [!CAUTION]  
 > **Educational & Research Disclaimer**  

@@ -17,6 +17,9 @@ from typing import Any, Dict, List, Optional
 
 from fastapi import Depends, FastAPI, HTTPException, Header, Query, WebSocket, WebSocketDisconnect, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
+
+from stock_engine.analytics.orderblock_engine import OrderBlockEngine
 
 from stock_engine.api.schemas import (
     BacktestSummaryResponse,
@@ -534,4 +537,72 @@ async def websocket_ticks(websocket: WebSocket, ticker: str):
         logger.info(f"WebSocket client disconnected for {ticker}")
     except Exception as e:
         logger.warning(f"WebSocket tick stream closed for {ticker}: {e}")
+
+
+# ==============================================================================
+# OrderBlock Terminal Endpoints (order-block.com Architecture)
+# ==============================================================================
+
+@app.get("/orderblock", response_class=HTMLResponse, tags=["OrderBlock"])
+@app.get("/app", response_class=HTMLResponse, tags=["OrderBlock"])
+def serve_orderblock_app():
+    """Serves the standalone OrderBlock institutional order-flow web application."""
+    from dataclasses import asdict
+    html_file = Path(__file__).parent.parent / "ui" / "orderblock.html"
+    if html_file.exists():
+        return HTMLResponse(content=html_file.read_text(encoding="utf-8"))
+    return HTMLResponse(content="<h1>OrderBlock UI Initializing...</h1>")
+
+
+@app.get("/api/v1/orderblock/sectors", tags=["OrderBlock"])
+def get_orderblock_sectors():
+    """Returns sorted sectoral capital velocity and money flow inflow/outflow."""
+    from dataclasses import asdict
+    engine = OrderBlockEngine()
+    return [asdict(s) for s in engine.get_sector_money_flows()]
+
+
+@app.get("/api/v1/orderblock/top-buys", tags=["OrderBlock"])
+def get_orderblock_top_buys():
+    """Returns Top 10 stocks undergoing aggressive institutional buying / Long Buildup."""
+    from dataclasses import asdict
+    engine = OrderBlockEngine()
+    return [asdict(s) for s in engine.get_top_10_buy_stocks()]
+
+
+@app.get("/api/v1/orderblock/least-sells", tags=["OrderBlock"])
+def get_orderblock_least_sells():
+    """Returns Least / Top 10 stocks undergoing institutional distribution / Short Buildup."""
+    from dataclasses import asdict
+    engine = OrderBlockEngine()
+    return [asdict(s) for s in engine.get_least_10_sell_stocks()]
+
+
+@app.get("/api/v1/orderblock/breadth", tags=["OrderBlock"])
+def get_orderblock_breadth():
+    """Returns market breadth (172 Bullish vs 41 Bearish) and Calm Index."""
+    engine = OrderBlockEngine()
+    return engine.get_market_breadth()
+
+
+@app.get("/api/v1/orderblock/option-pulse", tags=["OrderBlock"])
+def get_orderblock_option_pulse(underlying: str = "NIFTY"):
+    """Returns strike-wise Call/Put OI distribution, Max Pain strike, and PCR."""
+    engine = OrderBlockEngine()
+    return engine.get_option_pulse(underlying=underlying)
+
+
+@app.get("/api/v1/orderblock/rsi-screener", tags=["OrderBlock"])
+def get_orderblock_rsi_screener():
+    """Returns multi-timeframe RSI screener categorization."""
+    engine = OrderBlockEngine()
+    return engine.get_rsi_screener_results()
+
+
+@app.get("/api/v1/orderblock/academy", tags=["OrderBlock"])
+def get_orderblock_academy():
+    """Returns F&O academy curriculum modules."""
+    engine = OrderBlockEngine()
+    return engine.get_fo_academy_curriculum()
+
 
