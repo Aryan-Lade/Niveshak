@@ -39,7 +39,7 @@ st.sidebar.title("Navigation")
 page = st.sidebar.radio(
     "Go to",
     [
-        "⚡ OrderBlock Terminal (Live Flow)",
+        "⚡ Niveshak Terminal (Live Flow)",
         "1. Overview",
         "2. Signals",
         "3. Positions & Trades",
@@ -53,7 +53,7 @@ page = st.sidebar.radio(
 )
 
 # Render chosen page
-if page == "⚡ OrderBlock Terminal (Live Flow)":
+if page == "⚡ Niveshak Terminal (Live Flow)":
     from stock_engine.analytics.orderblock_engine import OrderBlockEngine
     ob_engine = OrderBlockEngine()
 
@@ -61,7 +61,7 @@ if page == "⚡ OrderBlock Terminal (Live Flow)":
         <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(15, 23, 42, 0.9); padding: 12px 18px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); margin-bottom: 16px;">
             <div style="display: flex; align-items: center; gap: 10px;">
                 <span style="font-size: 20px;">⚡</span>
-                <span style="font-size: 18px; font-weight: 800; color: #fff;">OrderBlock — Institutional Derivatives Terminal</span>
+                <span style="font-size: 18px; font-weight: 800; color: #fff;">Niveshak (निवेशक) — Institutional Derivatives Terminal</span>
                 <span style="background: rgba(16,185,129,0.2); color: #00ff88; font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 10px; border: 1px solid rgba(16,185,129,0.4);">LIVE SMC FLOW</span>
             </div>
             <div style="display: flex; gap: 12px; font-size: 13px; font-weight: 700;">
@@ -75,8 +75,8 @@ if page == "⚡ OrderBlock Terminal (Live Flow)":
     """, unsafe_allow_html=True)
 
     st.markdown("""
-        <a href="http://localhost:8000/orderblock" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #8b5cf6, #6366f1); color: #fff; padding: 8px 18px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 13px; margin-bottom: 16px; box-shadow: 0 4px 14px rgba(139,92,246,0.35);">
-            🚀 Open Fullscreen OrderBlock Web App (Standalone Mode) ↗
+        <a href="http://localhost:8000/niveshak" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #8b5cf6, #6366f1); color: #fff; padding: 8px 18px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 13px; margin-bottom: 16px; box-shadow: 0 4px 14px rgba(139,92,246,0.35);">
+            🚀 Open Fullscreen Niveshak Web App (Standalone Mode) ↗
         </a>
     """, unsafe_allow_html=True)
 

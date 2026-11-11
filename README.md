@@ -486,7 +486,7 @@ Located in `scripts/niveshak_tradingview_indicator.pine`:
 
 ---
 
-## 11. OrderBlock Institutional Terminal & Live Market Flow Analyzer (`order-block.com` Architecture)
+## 11. Niveshak Institutional Flow Terminal & Live Market Analyzer (`order-block.com` Architecture)
 
 Inspired by institutional order flow terminals like `order-block.com`, Niveshak features a dedicated, dark-themed institutional SMC and derivatives intelligence suite accessible either via a standalone full-screen web app or within the Streamlit command center.
 
@@ -532,8 +532,8 @@ flowchart LR
 8. **🎓 F&O Academy**: Quantitative curriculum covering Smart Money Concepts, Greeks, Volatility Surfaces, and 1% ATR position sizing.
 
 ### 2 Primary Modes of Operation:
-- **Standalone OrderBlock Web Platform (`/orderblock`)**:
-  - Full-screen glassmorphic dark interface (`#070b13`) matching `order-block.com/app/orderblock`.
+- **Standalone Niveshak Web Platform (`/niveshak` or `/orderblock`)**:
+  - Full-screen glassmorphic dark interface (`#060913`) matching the 4-column flow of `order-block.com/app/orderblock`.
   - Collapsible sidebar (`<<` / `>>`), search bar with `Ctrl + K` hotkey, live market open indicator, and user profile switcher.
   - Interactive SVG money flow streamlines with central POC liquidity hourglass.
   - Interactive **Trading Journal** with Net P&L dual chart (Cumulative P&L vs Drawdown) and 8 quantitative KPI metric cards.
@@ -589,18 +589,18 @@ Verify transaction cost calculations directly:
 python -m pytest tests/test_costs.py -v
 ```
 
-### 5. Launch the FastAPI Backend & OrderBlock Web App
+### 5. Launch the FastAPI Backend & Niveshak Web App
 ```bash
 uvicorn src.stock_engine.api.main:app --reload --port 8000
 ```
-- **OrderBlock Fullscreen Terminal**: `http://localhost:8000/orderblock` (or `http://localhost:8000/app`)
+- **Niveshak Fullscreen Terminal**: `http://localhost:8000/niveshak` (or `http://localhost:8000/orderblock` / `http://localhost:8000/app`)
 - **Interactive OpenAPI Documentation**: `http://localhost:8000/docs`
 
 ### 6. Launch the Streamlit Dashboard
 ```bash
 streamlit run src/stock_engine/dashboard/app.py
 ```
-- **Dashboard Interface**: `http://localhost:8501` (Features page `⚡ OrderBlock Terminal (Live Flow)`)
+- **Dashboard Interface**: `http://localhost:8501` (Features page `⚡ Niveshak Terminal (Live Flow)`)
 
 ---
 

@@ -540,21 +540,23 @@ async def websocket_ticks(websocket: WebSocket, ticker: str):
 
 
 # ==============================================================================
-# OrderBlock Terminal Endpoints (order-block.com Architecture)
+# Niveshak Flow Terminal Endpoints (order-block.com Architecture)
 # ==============================================================================
 
-@app.get("/orderblock", response_class=HTMLResponse, tags=["OrderBlock"])
-@app.get("/app", response_class=HTMLResponse, tags=["OrderBlock"])
+@app.get("/niveshak", response_class=HTMLResponse, tags=["Niveshak Flow"])
+@app.get("/orderblock", response_class=HTMLResponse, tags=["Niveshak Flow"])
+@app.get("/app", response_class=HTMLResponse, tags=["Niveshak Flow"])
 def serve_orderblock_app():
-    """Serves the standalone OrderBlock institutional order-flow web application."""
+    """Serves the standalone Niveshak institutional flow web application."""
     from dataclasses import asdict
     html_file = Path(__file__).parent.parent / "ui" / "orderblock.html"
     if html_file.exists():
         return HTMLResponse(content=html_file.read_text(encoding="utf-8"))
-    return HTMLResponse(content="<h1>OrderBlock UI Initializing...</h1>")
+    return HTMLResponse(content="<h1>Niveshak UI Initializing...</h1>")
 
 
-@app.get("/api/v1/orderblock/sectors", tags=["OrderBlock"])
+@app.get("/api/v1/niveshak/sectors", tags=["Niveshak Flow"])
+@app.get("/api/v1/orderblock/sectors", tags=["Niveshak Flow"])
 def get_orderblock_sectors():
     """Returns sorted sectoral capital velocity and money flow inflow/outflow."""
     from dataclasses import asdict
@@ -562,7 +564,8 @@ def get_orderblock_sectors():
     return [asdict(s) for s in engine.get_sector_money_flows()]
 
 
-@app.get("/api/v1/orderblock/top-buys", tags=["OrderBlock"])
+@app.get("/api/v1/niveshak/top-buys", tags=["Niveshak Flow"])
+@app.get("/api/v1/orderblock/top-buys", tags=["Niveshak Flow"])
 def get_orderblock_top_buys():
     """Returns Top 10 stocks undergoing aggressive institutional buying / Long Buildup."""
     from dataclasses import asdict
@@ -570,7 +573,8 @@ def get_orderblock_top_buys():
     return [asdict(s) for s in engine.get_top_10_buy_stocks()]
 
 
-@app.get("/api/v1/orderblock/least-sells", tags=["OrderBlock"])
+@app.get("/api/v1/niveshak/least-sells", tags=["Niveshak Flow"])
+@app.get("/api/v1/orderblock/least-sells", tags=["Niveshak Flow"])
 def get_orderblock_least_sells():
     """Returns Least / Top 10 stocks undergoing institutional distribution / Short Buildup."""
     from dataclasses import asdict
@@ -578,49 +582,56 @@ def get_orderblock_least_sells():
     return [asdict(s) for s in engine.get_least_10_sell_stocks()]
 
 
-@app.get("/api/v1/orderblock/breadth", tags=["OrderBlock"])
+@app.get("/api/v1/niveshak/breadth", tags=["Niveshak Flow"])
+@app.get("/api/v1/orderblock/breadth", tags=["Niveshak Flow"])
 def get_orderblock_breadth():
     """Returns market breadth (172 Bullish vs 41 Bearish) and Calm Index."""
     engine = OrderBlockEngine()
     return engine.get_market_breadth()
 
 
-@app.get("/api/v1/orderblock/option-pulse", tags=["OrderBlock"])
+@app.get("/api/v1/niveshak/option-pulse", tags=["Niveshak Flow"])
+@app.get("/api/v1/orderblock/option-pulse", tags=["Niveshak Flow"])
 def get_orderblock_option_pulse(underlying: str = "NIFTY"):
     """Returns strike-wise Call/Put OI distribution, Max Pain strike, and PCR."""
     engine = OrderBlockEngine()
     return engine.get_option_pulse(underlying=underlying)
 
 
-@app.get("/api/v1/orderblock/rsi-screener", tags=["OrderBlock"])
+@app.get("/api/v1/niveshak/rsi-screener", tags=["Niveshak Flow"])
+@app.get("/api/v1/orderblock/rsi-screener", tags=["Niveshak Flow"])
 def get_orderblock_rsi_screener():
     """Returns multi-timeframe RSI screener categorization."""
     engine = OrderBlockEngine()
     return engine.get_rsi_screener_results()
 
 
-@app.get("/api/v1/orderblock/academy", tags=["OrderBlock"])
+@app.get("/api/v1/niveshak/academy", tags=["Niveshak Flow"])
+@app.get("/api/v1/orderblock/academy", tags=["Niveshak Flow"])
 def get_orderblock_academy():
     """Returns F&O academy curriculum modules."""
     engine = OrderBlockEngine()
     return engine.get_fo_academy_curriculum()
 
 
-@app.get("/api/v1/orderblock/stock/{ticker}", tags=["OrderBlock"])
+@app.get("/api/v1/niveshak/stock/{ticker}", tags=["Niveshak Flow"])
+@app.get("/api/v1/orderblock/stock/{ticker}", tags=["Niveshak Flow"])
 def get_orderblock_stock_detail(ticker: str, timeframe: str = "Daily"):
     """Returns detailed stock analysis, SMC levels, Grounded AI explanation, and TradingView candles."""
     engine = OrderBlockEngine()
     return engine.get_stock_detail(ticker=ticker, timeframe=timeframe)
 
 
-@app.get("/api/v1/orderblock/alerts", tags=["OrderBlock"])
+@app.get("/api/v1/niveshak/alerts", tags=["Niveshak Flow"])
+@app.get("/api/v1/orderblock/alerts", tags=["Niveshak Flow"])
 def get_orderblock_alerts():
     """Returns real-time trading signal and price alerts."""
     engine = OrderBlockEngine()
     return engine.get_realtime_alerts()
 
 
-@app.get("/api/v1/orderblock/watchlist", tags=["OrderBlock"])
+@app.get("/api/v1/niveshak/watchlist", tags=["Niveshak Flow"])
+@app.get("/api/v1/orderblock/watchlist", tags=["Niveshak Flow"])
 def get_orderblock_watchlist():
     """Returns curated high-conviction watchlist symbols."""
     engine = OrderBlockEngine()
