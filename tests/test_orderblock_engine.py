@@ -66,3 +66,32 @@ def test_rsi_screener_and_academy(engine):
     academy = engine.get_fo_academy_curriculum()
     assert len(academy) == 4
     assert academy[0]["module_id"] == "MOD_01"
+
+
+def test_stock_detail_and_tradingview_candles(engine):
+    detail = engine.get_stock_detail("TVSMOTOR", timeframe="Daily")
+    assert detail["ticker"] == "TVSMOTOR"
+    assert detail["price"] > 2000
+    assert detail["confidence_score"] >= 80
+    assert len(detail["candles"]) >= 40
+    # Candlestick keys
+    candle = detail["candles"][0]
+    assert "time" in candle and "open" in candle and "high" in candle and "low" in candle and "close" in candle and "volume" in candle
+    # Markers & AI explanation
+    assert len(detail["markers"]) == 3
+    assert "TVSMOTOR" in detail["ai_explanation"]
+    assert "SMC" in detail["ai_explanation"] or "institutional" in detail["ai_explanation"]
+    assert "support_1" in detail and "resistance_1" in detail
+
+
+def test_realtime_alerts_and_watchlist(engine):
+    alerts = engine.get_realtime_alerts()
+    assert len(alerts) >= 3
+    assert any(a["ticker"] == "TVSMOTOR" for a in alerts)
+    assert any(a["sentiment"] == "bullish" for a in alerts)
+
+    watchlist = engine.get_watchlist()
+    assert len(watchlist) >= 5
+    assert any(w["ticker"] == "TVSMOTOR" for w in watchlist)
+
+

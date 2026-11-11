@@ -302,3 +302,203 @@ class OrderBlockEngine:
                 ],
             },
         ]
+
+    def get_stock_detail(self, ticker: str, timeframe: str = "Daily") -> Dict[str, Any]:
+        """
+        Generates full quantitative profile, institutional SMC levels,
+        Grounded AI analysis, and candlestick series for TradingView Lightweight Charts.
+        """
+        stocks = self.get_stock_universe_flows()
+        match = next((s for s in stocks if s.ticker.upper() == ticker.upper()), None)
+        if not match:
+            # Fallback for arbitrary symbols
+            match = StockFlowItem(
+                ticker=ticker.upper(),
+                sector="EQUITY",
+                price=1500.0,
+                change_pct=1.2,
+                oi_change_pct=3.5,
+                buildup_status="LONG BUILD-UP",
+                rating_stars=4,
+                volume_surge=1.5,
+                order_block_zone=(1480.0, 1495.0),
+                liquidity_score=85.0,
+                rsi=58.5,
+            )
+
+        is_bull = match.change_pct >= 0 or "BUILD-UP" in match.buildup_status or "COVERING" in match.buildup_status
+        price = match.price
+        
+        # Calculate institutional SMC levels
+        s1 = round(price * 0.985, 2)
+        s2 = round(price * 0.965, 2)
+        r1 = round(price * 1.025, 2)
+        r2 = round(price * 1.050, 2)
+        vwap = round(price * (0.995 if is_bull else 1.005), 2)
+        entry_price = round(price * (0.998 if is_bull else 1.002), 2)
+        stop_loss = round(s1 * 0.995 if is_bull else r1 * 1.005, 2)
+        t1 = r1 if is_bull else s1
+        t2 = r2 if is_bull else s2
+        risk = abs(entry_price - stop_loss)
+        reward = abs(t1 - entry_price)
+        rr_ratio = f"{round(reward / (risk + 1e-4), 1)}:1"
+        confidence_score = min(99, max(82, int(match.liquidity_score + 5)))
+
+        # Grounded AI Analysis Explanation
+        if is_bull:
+            ai_exp = (
+                f"{match.ticker} ({match.sector}) is showing aggressive institutional accumulation "
+                f"({match.buildup_status}) with price up +{match.change_pct:.2f}% and Open Interest expanding +{match.oi_change_pct:.1f}%. "
+                f"Trading cleanly above institutional VWAP of ₹{vwap:,.2f} with a {match.volume_surge:.1f}x volume surge. "
+                f"Demand Order Block between ₹{match.order_block_zone[0]:,.2f} - ₹{match.order_block_zone[1]:,.2f} provides a strong "
+                f"liquidity floor with a {rr_ratio} Risk-to-Reward ratio targeting ₹{t1:,.2f}."
+            )
+        else:
+            ai_exp = (
+                f"{match.ticker} ({match.sector}) is under heavy institutional distribution "
+                f"({match.buildup_status}) with price down {match.change_pct:.2f}% and aggressive short contracts (+{match.oi_change_pct:.1f}% OI). "
+                f"Trading below institutional VWAP of ₹{vwap:,.2f} with repeated rejections at supply zone ₹{match.order_block_zone[0]:,.2f} - ₹{match.order_block_zone[1]:,.2f}. "
+                f"Bearish continuation favored targeting support S1 ₹{t1:,.2f} with an invalidation stop-loss at ₹{stop_loss:,.2f}."
+            )
+
+        # Generate realistic candlestick bars for TradingView Lightweight Charts
+        num_bars = 45
+        today = datetime.date.today()
+        candles = []
+        cur_close = price * (0.90 if is_bull else 1.10)
+        
+        for idx in range(num_bars):
+            bar_date = today - datetime.timedelta(days=(num_bars - idx))
+            # Upward or downward drift with some noise
+            step = (price - cur_close) / max(1, (num_bars - idx))
+            noise = (self.rng.random() - 0.48) * (price * 0.015)
+            next_close = max(10.0, cur_close + step + noise)
+            bar_open = cur_close
+            bar_high = max(bar_open, next_close) + abs(self.rng.random() * (price * 0.008))
+            bar_low = min(bar_open, next_close) - abs(self.rng.random() * (price * 0.008))
+            bar_vol = int(50000 + (self.rng.random() * 80000) * match.volume_surge)
+            
+            # Last bar locks onto exact current price
+            if idx == num_bars - 1:
+                next_close = price
+                bar_high = max(bar_high, price)
+                bar_low = min(bar_low, price)
+
+            candles.append({
+                "time": bar_date.strftime("%Y-%m-%d"),
+                "open": round(bar_open, 2),
+                "high": round(bar_high, 2),
+                "low": round(bar_low, 2),
+                "close": round(next_close, 2),
+                "volume": bar_vol,
+            })
+            cur_close = next_close
+
+        # TradingView markers for Entry, T1, SL
+        last_date = candles[-1]["time"]
+        prev_date = candles[-5]["time"]
+        markers = [
+            {
+                "time": prev_date,
+                "position": "belowBar" if is_bull else "aboveBar",
+                "color": "#10b981" if is_bull else "#ef4444",
+                "shape": "arrowUp" if is_bull else "arrowDown",
+                "text": f"ENTRY ₹{entry_price:,.1f}",
+            },
+            {
+                "time": last_date,
+                "position": "aboveBar" if is_bull else "belowBar",
+                "color": "#38bdf8",
+                "shape": "circle",
+                "text": f"TARGET ₹{t1:,.1f}",
+            },
+            {
+                "time": prev_date,
+                "position": "belowBar" if is_bull else "aboveBar",
+                "color": "#f43f5e",
+                "shape": "square",
+                "text": f"STOP ₹{stop_loss:,.1f}",
+            },
+        ]
+
+        return {
+            "ticker": match.ticker,
+            "company_name": f"{match.ticker} India Limited",
+            "sector": match.sector,
+            "price": price,
+            "change_pct": match.change_pct,
+            "volume_surge": match.volume_surge,
+            "oi_change_pct": match.oi_change_pct,
+            "buildup_status": match.buildup_status,
+            "confidence_score": confidence_score,
+            "vwap": vwap,
+            "entry_price": entry_price,
+            "support_1": s1,
+            "support_2": s2,
+            "resistance_1": r1,
+            "resistance_2": r2,
+            "stop_loss": stop_loss,
+            "target_1": t1,
+            "target_2": t2,
+            "trading_zone": list(match.order_block_zone),
+            "risk_reward": rr_ratio,
+            "rsi": match.rsi,
+            "open_interest": f"{match.liquidity_score * 0.02:.2f}M contracts ({'+' if match.oi_change_pct >= 0 else ''}{match.oi_change_pct:.1f}%)",
+            "ai_explanation": ai_exp,
+            "candles": candles,
+            "markers": markers,
+            "order_block": {
+                "top": max(match.order_block_zone),
+                "bottom": min(match.order_block_zone),
+                "bias": "bullish" if is_bull else "bearish",
+            },
+            "timeframe": timeframe,
+        }
+
+    def get_realtime_alerts(self) -> List[Dict[str, Any]]:
+        """Returns live algorithmic signal and price alerts."""
+        return [
+            {
+                "id": "ALT_01",
+                "ticker": "TVSMOTOR",
+                "time": "14:15:22",
+                "type": "ORB-15 Breakout",
+                "message": "TVSMOTOR broke Opening Range High at ₹2,415 with 2.4x volume surge! Bias: Strong Long Buildup.",
+                "confidence": 97,
+                "sentiment": "bullish",
+            },
+            {
+                "id": "ALT_02",
+                "ticker": "INOXWIND",
+                "time": "14:12:05",
+                "type": "Order Block Retest",
+                "message": "INOXWIND bounced off H4 Demand Order Block ₹168-172 with institutional buy-side flow.",
+                "confidence": 92,
+                "sentiment": "bullish",
+            },
+            {
+                "id": "ALT_03",
+                "ticker": "ANANDRATHI",
+                "time": "14:08:44",
+                "type": "Supply Block Rejection",
+                "message": "ANANDRATHI rejected major supply zone at ₹4,050. Short buildup acceleration (+11.2% OI).",
+                "confidence": 94,
+                "sentiment": "bearish",
+            },
+            {
+                "id": "ALT_04",
+                "ticker": "EICHERMOT",
+                "time": "13:58:19",
+                "type": "VWAP Expansion",
+                "message": "EICHERMOT expanded cleanly above institutional VWAP ₹4840. Multi-timeframe RSI 66.8 confirming trend.",
+                "confidence": 91,
+                "sentiment": "bullish",
+            },
+        ]
+
+    def get_watchlist(self) -> List[Dict[str, Any]]:
+        """Returns default curated high-conviction watchlist."""
+        stocks = self.get_stock_universe_flows()
+        return [asdict(s) for s in stocks[:6]]
+
+

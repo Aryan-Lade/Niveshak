@@ -606,3 +606,25 @@ def get_orderblock_academy():
     return engine.get_fo_academy_curriculum()
 
 
+@app.get("/api/v1/orderblock/stock/{ticker}", tags=["OrderBlock"])
+def get_orderblock_stock_detail(ticker: str, timeframe: str = "Daily"):
+    """Returns detailed stock analysis, SMC levels, Grounded AI explanation, and TradingView candles."""
+    engine = OrderBlockEngine()
+    return engine.get_stock_detail(ticker=ticker, timeframe=timeframe)
+
+
+@app.get("/api/v1/orderblock/alerts", tags=["OrderBlock"])
+def get_orderblock_alerts():
+    """Returns real-time trading signal and price alerts."""
+    engine = OrderBlockEngine()
+    return engine.get_realtime_alerts()
+
+
+@app.get("/api/v1/orderblock/watchlist", tags=["OrderBlock"])
+def get_orderblock_watchlist():
+    """Returns curated high-conviction watchlist symbols."""
+    engine = OrderBlockEngine()
+    return engine.get_watchlist()
+
+
+

@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
 
   <style>
     :root {
@@ -49,7 +50,6 @@
       display: flex;
     }
 
-    /* Scrollbar */
     ::-webkit-scrollbar {
       width: 6px;
       height: 6px;
@@ -65,7 +65,6 @@
       background: rgba(255, 255, 255, 0.25);
     }
 
-    /* App Container */
     .app-layout {
       display: flex;
       width: 100vw;
@@ -176,7 +175,7 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 10px 12px;
+      padding: 9px 12px;
       border-radius: 8px;
       color: var(--text-muted);
       cursor: pointer;
@@ -298,27 +297,27 @@
 
     /* Top Navigation Bar */
     .topbar {
-      height: 64px;
+      height: 56px;
       border-bottom: 1px solid var(--border-subtle);
+      background: rgba(7, 11, 19, 0.7);
+      backdrop-filter: blur(12px);
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 0 24px;
-      background: rgba(7, 11, 19, 0.85);
-      backdrop-filter: blur(12px);
       position: sticky;
       top: 0;
-      z-index: 50;
+      z-index: 90;
     }
 
     .search-box {
       display: flex;
       align-items: center;
-      gap: 10px;
-      background: rgba(255, 255, 255, 0.04);
+      background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--border-subtle);
       border-radius: 8px;
-      padding: 6px 14px;
+      padding: 6px 12px;
+      gap: 8px;
       width: 320px;
     }
 
@@ -327,17 +326,16 @@
       border: none;
       outline: none;
       color: #fff;
-      font-size: 13px;
+      font-size: 12px;
       width: 100%;
     }
 
     .search-shortcut {
       font-size: 10px;
-      font-weight: 600;
-      color: var(--text-dim);
-      background: rgba(255, 255, 255, 0.08);
-      padding: 2px 6px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2px 5px;
       border-radius: 4px;
+      color: var(--text-muted);
       font-family: 'JetBrains Mono', monospace;
     }
 
@@ -351,53 +349,84 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      background: rgba(15, 23, 42, 0.8);
-      padding: 6px 14px;
-      border-radius: 8px;
-      border: 1px solid var(--border-subtle);
       font-size: 12px;
       font-weight: 700;
     }
 
-    .breadth-bull {
-      color: var(--green-neon);
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .breadth-bear {
-      color: var(--red-neon);
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
+    .breadth-bull { color: var(--green-neon); }
+    .breadth-bear { color: var(--red-neon); }
 
     .unlock-btn {
-      background: linear-gradient(135deg, #8b5cf6, #6366f1);
+      background: linear-gradient(135deg, var(--indigo), var(--purple));
       border: none;
       color: #fff;
-      padding: 7px 16px;
-      border-radius: 8px;
-      font-size: 12px;
       font-weight: 700;
+      font-size: 12px;
+      padding: 6px 14px;
+      border-radius: 7px;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 6px;
-      box-shadow: 0 4px 14px rgba(139, 92, 246, 0.35);
-      transition: all 0.2s;
+      transition: transform 0.15s ease;
     }
     .unlock-btn:hover {
       transform: translateY(-1px);
-      box-shadow: 0 6px 18px rgba(139, 92, 246, 0.5);
     }
 
-    /* Content Panes */
+    /* Alert Ticker Bar */
+    .alert-ticker-bar {
+      background: rgba(15, 23, 42, 0.65);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 6px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+    }
+
+    .alert-ticker-content {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .alert-badge {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--green-neon);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .alert-badge.bearish {
+      background: rgba(239, 68, 68, 0.2);
+      color: var(--red-neon);
+      border-color: rgba(239, 68, 68, 0.4);
+    }
+
+    .alert-message {
+      color: #e2e8f0;
+      font-weight: 600;
+    }
+
+    .alert-conf-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--cyan);
+      background: rgba(56, 189, 248, 0.12);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    /* Content Area */
     .tab-content {
       display: none;
-      padding: 24px;
-      animation: fadeIn 0.22s ease-in-out;
+      padding: 20px 24px;
+      animation: fadeIn 0.25s ease-in-out;
     }
 
     .tab-content.active {
@@ -409,35 +438,36 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* =========================================================================
-       TAB 1: LIVE ORDER BLOCK STREAM & FLOW TERMINAL
-       ========================================================================= */
+    /* Terminal 3-Column Layout */
     .flow-terminal-container {
       display: grid;
-      grid-template-columns: 220px 1fr 340px;
+      grid-template-columns: 200px 1fr 340px;
       gap: 16px;
-      height: calc(100vh - 115px);
+      height: calc(100vh - 120px);
+      min-height: 640px;
     }
 
-    /* Sector Rail Column */
+    /* Left Sectors Rail */
     .sector-rail {
-      background: var(--bg-card);
+      background: var(--bg-surface);
       border: 1px solid var(--border-subtle);
       border-radius: 12px;
-      padding: 14px;
       overflow-y: auto;
+      padding: 12px 8px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 2px;
     }
 
     .sector-rail-title {
       font-size: 11px;
       font-weight: 800;
-      text-transform: uppercase;
       color: var(--text-dim);
-      margin-bottom: 6px;
+      text-transform: uppercase;
       letter-spacing: 0.5px;
+      padding: 4px 8px 8px 8px;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: 6px;
       display: flex;
       justify-content: space-between;
     }
@@ -446,30 +476,28 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 7px 10px;
+      padding: 6px 8px;
       border-radius: 6px;
       font-size: 11px;
       font-weight: 600;
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid transparent;
+      color: var(--text-muted);
       cursor: pointer;
-      transition: all 0.15s;
+      transition: all 0.15s ease;
     }
 
     .sector-item:hover {
-      background: rgba(255, 255, 255, 0.06);
-      border-color: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
     }
 
     .val-positive { color: var(--green-neon); font-family: 'JetBrains Mono', monospace; font-weight: 700; }
     .val-negative { color: var(--red-neon); font-family: 'JetBrains Mono', monospace; font-weight: 700; }
 
-    /* Center Flow Canvas */
+    /* Center Streamlines Panel */
     .center-flow-panel {
-      background: var(--bg-card);
+      background: var(--bg-surface);
       border: 1px solid var(--border-subtle);
       border-radius: 12px;
-      padding: 14px;
       display: flex;
       flex-direction: column;
       position: relative;
@@ -477,26 +505,28 @@
     }
 
     .flow-canvas-header {
+      padding: 12px 18px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 12px;
+      border-bottom: 1px solid var(--border-subtle);
     }
 
     .flow-title {
-      font-size: 14px;
-      font-weight: 800;
+      font-size: 13px;
+      font-weight: 700;
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
-    /* Live SVG Flow Visualization */
     .flow-svg-canvas {
       flex: 1;
-      width: 100%;
-      height: 100%;
       position: relative;
+      background: radial-gradient(circle at 50% 50%, #0d1a33 0%, #070b13 85%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .flow-svg-canvas svg {
@@ -504,55 +534,62 @@
       height: 100%;
     }
 
-    /* Flowing Lines Animation */
     .stream-line-green {
-      stroke: var(--green);
-      stroke-width: 1.5;
       fill: none;
-      stroke-dasharray: 6 3;
-      animation: dashMoveGreen 20s linear infinite;
-      opacity: 0.65;
+      stroke: url(#greenGradient);
+      stroke-width: 2.4;
+      stroke-linecap: round;
+      opacity: 0.85;
+      animation: dashGreen 2.8s linear infinite;
     }
 
     .stream-line-red {
-      stroke: var(--red);
-      stroke-width: 1.5;
       fill: none;
-      stroke-dasharray: 6 3;
-      animation: dashMoveRed 20s linear infinite;
-      opacity: 0.65;
+      stroke: url(#redGradient);
+      stroke-width: 2.4;
+      stroke-linecap: round;
+      opacity: 0.85;
+      animation: dashRed 2.8s linear infinite;
     }
 
-    @keyframes dashMoveGreen {
-      to { stroke-dashoffset: -1000; }
-    }
-    @keyframes dashMoveRed {
-      to { stroke-dashoffset: 1000; }
+    @keyframes dashGreen {
+      0% { stroke-dashoffset: 100; stroke-dasharray: 8 4; }
+      100% { stroke-dashoffset: 0; stroke-dasharray: 8 4; }
     }
 
-    /* Middle Volume Hourglass */
+    @keyframes dashRed {
+      0% { stroke-dashoffset: 100; stroke-dasharray: 8 4; }
+      100% { stroke-dashoffset: 0; stroke-dasharray: 8 4; }
+    }
+
     .volume-hourglass {
       fill: rgba(255, 255, 255, 0.04);
-      stroke: rgba(255, 255, 255, 0.12);
-      stroke-width: 1;
+      stroke: rgba(255, 255, 255, 0.25);
+      stroke-width: 1.5;
     }
 
     /* Right Stock Cluster Column */
     .stocks-cluster-column {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      overflow-y: auto;
+      padding: 12px 14px;
       display: flex;
       flex-direction: column;
       gap: 12px;
-      overflow-y: auto;
     }
 
     .cluster-section-title {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 800;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border-subtle);
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      margin-bottom: 4px;
+      align-items: center;
     }
 
     .title-bull { color: var(--green-neon); }
@@ -570,30 +607,23 @@
       border-radius: 8px;
       padding: 10px 12px;
       cursor: pointer;
-      transition: all 0.2s ease;
-      position: relative;
-      overflow: hidden;
+      transition: all 0.18s ease;
     }
 
     .stock-card:hover {
       background: var(--bg-card-hover);
       border-color: var(--border-hover);
-      transform: translateY(-1px);
+      transform: translateX(2px);
     }
 
-    .stock-card.bull-card {
-      border-left: 3px solid var(--green-neon);
-    }
-
-    .stock-card.bear-card {
-      border-left: 3px solid var(--red-neon);
-    }
+    .bull-card { border-left: 3px solid var(--green-neon); }
+    .bear-card { border-left: 3px solid var(--red-neon); }
 
     .card-top {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
 
     .ticker-name {
@@ -607,45 +637,26 @@
       font-weight: 800;
       padding: 2px 6px;
       border-radius: 4px;
-      letter-spacing: 0.3px;
     }
 
-    .badge-long-buildup {
-      background: rgba(16, 185, 129, 0.18);
-      color: var(--green-neon);
-      border: 1px solid rgba(16, 185, 129, 0.35);
-    }
-
-    .badge-short-buildup {
-      background: rgba(239, 68, 68, 0.18);
-      color: var(--red-neon);
-      border: 1px solid rgba(239, 68, 68, 0.35);
-    }
-
-    .badge-short-covering {
-      background: rgba(56, 189, 248, 0.18);
-      color: var(--cyan);
-      border: 1px solid rgba(56, 189, 248, 0.35);
-    }
-
-    .badge-long-unwinding {
-      background: rgba(251, 146, 60, 0.18);
-      color: #fb923c;
-      border: 1px solid rgba(251, 146, 60, 0.35);
-    }
+    .badge-long-buildup { background: rgba(16, 185, 129, 0.2); color: var(--green-neon); }
+    .badge-short-covering { background: rgba(56, 189, 248, 0.2); color: var(--cyan); }
+    .badge-short-buildup { background: rgba(239, 68, 68, 0.2); color: var(--red-neon); }
+    .badge-long-unwinding { background: rgba(251, 146, 60, 0.2); color: #fb923c; }
 
     .card-mid {
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
       font-size: 11px;
+      color: var(--text-muted);
       margin-bottom: 6px;
     }
 
     .price-text {
       font-family: 'JetBrains Mono', monospace;
-      font-weight: 600;
-      color: var(--text-muted);
+      font-weight: 700;
+      color: #e2e8f0;
     }
 
     .volume-bar-track {
@@ -654,7 +665,6 @@
       background: rgba(255, 255, 255, 0.06);
       border-radius: 2px;
       overflow: hidden;
-      margin-top: 4px;
     }
 
     .volume-bar-fill-green {
@@ -676,6 +686,7 @@
       border-radius: 10px;
       padding: 12px 14px;
       margin-bottom: 8px;
+      cursor: pointer;
     }
 
     .hero-stock-card.bear {
@@ -714,9 +725,115 @@
       border-top: 1px solid rgba(255, 255, 255, 0.05);
     }
 
-    /* =========================================================================
-       TAB 2: TRADING JOURNAL
-       ========================================================================= */
+    /* TradingView Timeframe Selector Pills */
+    .tf-selector-row {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .tf-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .tf-pill.active, .tf-pill:hover {
+      background: var(--indigo);
+      color: #fff;
+      border-color: var(--indigo);
+    }
+
+    /* Detail Modal Styles */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.78);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-hover);
+      border-radius: 14px;
+      width: 90vw;
+      max-width: 880px;
+      max-height: 88vh;
+      overflow-y: auto;
+      padding: 22px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85);
+      position: relative;
+    }
+
+    .close-modal-btn {
+      position: absolute;
+      top: 16px;
+      right: 18px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    /* AI Analysis Callout Box */
+    .ai-analysis-card {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(15, 23, 42, 0.7) 100%);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin: 14px 0;
+    }
+
+    .ai-analysis-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--cyan);
+      margin-bottom: 6px;
+    }
+
+    .ai-analysis-text {
+      font-size: 12px;
+      line-height: 1.6;
+      color: #cbd5e1;
+    }
+
+    /* Mobile Responsive Queries */
+    @media (max-width: 960px) {
+      .flow-terminal-container {
+        grid-template-columns: 1fr;
+        height: auto;
+      }
+      .sector-rail { max-height: 240px; }
+      .center-flow-panel { min-height: 380px; }
+      .sidebar { position: absolute; left: 0; top: 0; bottom: 0; }
+      .sidebar.collapsed { display: none; }
+    }
+
+    @media (max-width: 640px) {
+      .topbar { padding: 0 12px; }
+      .search-box { width: 180px; }
+      .modal-box { width: 95vw; padding: 14px; }
+      .journal-stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+    }
+
+    /* Journal Styles */
     .journal-header {
       display: flex;
       align-items: center;
@@ -815,51 +932,13 @@
       font-size: 10px;
       color: var(--text-muted);
     }
-
-    /* Modal / Popups */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(8px);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .modal-box {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-hover);
-      border-radius: 14px;
-      width: 520px;
-      padding: 24px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
-      position: relative;
-    }
-
-    .close-modal-btn {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      font-size: 18px;
-      cursor: pointer;
-    }
   </style>
 </head>
 <body>
 
 <div class="app-layout">
 
-  <!-- =========================================================================
-       SIDEBAR NAVIGATION
-       ========================================================================= -->
+  <!-- SIDEBAR NAVIGATION -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-top">
       <div class="sidebar-header">
@@ -893,6 +972,15 @@
 
       <div class="nav-group-title">Grow & Intelligence</div>
       <ul class="nav-list">
+        <li class="nav-item" onclick="switchTab('tab-chart')">
+          <span class="nav-icon">📈</span>
+          <span class="nav-label">TradingView Chart</span>
+        </li>
+        <li class="nav-item" onclick="switchTab('tab-watchlist')">
+          <span class="nav-icon">⭐</span>
+          <span class="nav-label">My Watchlist</span>
+          <span class="badge-pill" id="watchlist-badge">6</span>
+        </li>
         <li class="nav-item" onclick="switchTab('tab-journal')">
           <span class="nav-icon">📖</span>
           <span class="nav-label">Trading Journal</span>
@@ -944,16 +1032,14 @@
     </div>
   </aside>
 
-  <!-- =========================================================================
-       MAIN VIEWPORT
-       ========================================================================= -->
+  <!-- MAIN VIEWPORT -->
   <main class="main-viewport">
 
     <!-- Topbar -->
     <header class="topbar">
       <div class="search-box">
         <span>🔍</span>
-        <input type="text" id="global-search" placeholder="Search stocks, sectors, F&O..." oninput="handleSearch(this.value)">
+        <input type="text" id="global-search" placeholder="Search stocks, sectors, F&O... [Ctrl+K]" oninput="handleSearch(this.value)">
         <span class="search-shortcut">Ctrl K</span>
       </div>
 
@@ -970,22 +1056,29 @@
       </div>
     </header>
 
-    <!-- =========================================================================
-         TAB 1: ORDER BLOCK LIVE FLOW CANVAS (Matches User Screenshots 1, 2, 3)
-         ========================================================================= -->
+    <!-- Alert Ticker Bar -->
+    <div class="alert-ticker-bar">
+      <div class="alert-ticker-content">
+        <span class="pulse-dot"></span>
+        <span class="alert-badge" id="alert-type">ORB-15 BREAKOUT</span>
+        <span class="alert-message" id="alert-msg">TVSMOTOR broke Opening Range High at ₹2,415 with 2.4x volume surge! Bias: Strong Long Buildup.</span>
+      </div>
+      <span class="alert-conf-pill" id="alert-conf">97% Confidence</span>
+    </div>
+
+    <!-- TAB 1: ORDER BLOCK LIVE FLOW CANVAS -->
     <section class="tab-content active" id="tab-orderblock">
       <div class="flow-terminal-container">
 
-        <!-- Column 1: Sectors Rail -->
+        <!-- Sectors Rail -->
         <div class="sector-rail" id="sectors-list">
           <div class="sector-rail-title">
             <span>Sector</span>
             <span>Flow %</span>
           </div>
-          <!-- Filled dynamically via JS -->
         </div>
 
-        <!-- Column 2: Center Money Flow Canvas -->
+        <!-- Center Money Flow Canvas -->
         <div class="center-flow-panel">
           <div class="flow-canvas-header">
             <div class="flow-title">
@@ -997,7 +1090,17 @@
 
           <div class="flow-svg-canvas">
             <svg viewBox="0 0 700 500" preserveAspectRatio="none">
-              <!-- Background Grid -->
+              <defs>
+                <linearGradient id="greenGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#10b981" stop-opacity="0.2" />
+                  <stop offset="100%" stop-color="#00ff88" stop-opacity="1" />
+                </linearGradient>
+                <linearGradient id="redGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#ef4444" stop-opacity="0.2" />
+                  <stop offset="100%" stop-color="#ff3b69" stop-opacity="1" />
+                </linearGradient>
+              </defs>
+
               <line x1="0" y1="250" x2="700" y2="250" stroke="rgba(255,255,255,0.08)" stroke-dasharray="4 4"/>
               
               <!-- Green Streams flowing into Bullish Cluster -->
@@ -1020,10 +1123,10 @@
           </div>
         </div>
 
-        <!-- Column 3: Stock Clusters (Top 10 Buy & Least 10 Sell) -->
+        <!-- Stock Clusters (Top 10 Buy & Least 10 Sell) -->
         <div class="stocks-cluster-column">
 
-          <!-- Top Buy High Conviction Section -->
+          <!-- Top Buy Section -->
           <div class="cluster-section-title title-bull">
             <span>▲ TOP 10 BUYS (ACCUMULATION)</span>
             <span style="font-size: 10px;">172 Stocks</span>
@@ -1046,13 +1149,11 @@
             </div>
           </div>
 
-          <div class="stock-card-row" id="top-buys-list">
-            <!-- Populated via JS -->
-          </div>
+          <div class="stock-card-row" id="top-buys-list"></div>
 
           <div style="height: 12px;"></div>
 
-          <!-- Least 10 Sell Short Buildup Section -->
+          <!-- Least 10 Sell Section -->
           <div class="cluster-section-title title-bear">
             <span>▼ LEAST 10 SELLS (DISTRIBUTION)</span>
             <span style="font-size: 10px;">41 Stocks</span>
@@ -1075,18 +1176,68 @@
             </div>
           </div>
 
-          <div class="stock-card-row" id="least-sells-list">
-            <!-- Populated via JS -->
-          </div>
+          <div class="stock-card-row" id="least-sells-list"></div>
 
         </div>
 
       </div>
     </section>
 
-    <!-- =========================================================================
-         TAB 2: TRADING JOURNAL (Matches User Screenshot 2)
-         ========================================================================= -->
+    <!-- TAB 2: TRADINGVIEW TERMINAL -->
+    <section class="tab-content" id="tab-chart">
+      <div class="journal-header">
+        <div class="journal-title-box">
+          <h2>📈 TradingView Candlestick Chart Terminal</h2>
+          <p>Interactive multi-timeframe candlestick chart with Order Block zones & entry/exit markers.</p>
+        </div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <select id="tv-stock-select" style="background: var(--bg-surface); color: #fff; border: 1px solid var(--border-hover); padding: 6px 12px; border-radius: 6px; font-weight: 700;" onchange="loadDedicatedChart(this.value)">
+            <option value="TVSMOTOR">TVSMOTOR (+8.71%)</option>
+            <option value="INOXWIND">INOXWIND (+6.76%)</option>
+            <option value="EICHERMOT">EICHERMOT (+4.17%)</option>
+            <option value="RBLBANK">RBLBANK (+4.32%)</option>
+            <option value="ANANDRATHI">ANANDRATHI (-4.68%)</option>
+            <option value="HINDPETRO">HINDPETRO (-2.10%)</option>
+            <option value="RELIANCE">RELIANCE (+1.25%)</option>
+            <option value="TCS">TCS (+1.10%)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="tf-selector-row" id="main-tf-row">
+        <button class="tf-pill" onclick="switchDedicatedTf('1m', this)">1m</button>
+        <button class="tf-pill" onclick="switchDedicatedTf('5m', this)">5m</button>
+        <button class="tf-pill" onclick="switchDedicatedTf('15m', this)">15m</button>
+        <button class="tf-pill" onclick="switchDedicatedTf('1h', this)">1h</button>
+        <button class="tf-pill" onclick="switchDedicatedTf('4h', this)">4h</button>
+        <button class="tf-pill active" onclick="switchDedicatedTf('Daily', this)">Daily</button>
+      </div>
+
+      <div class="pnl-chart-card" style="padding: 14px;">
+        <div id="tv-main-chart" style="height: 420px; width: 100%; border-radius: 8px; overflow: hidden;"></div>
+      </div>
+
+      <!-- Live SMC Levels Grid -->
+      <div class="journal-stats-grid" id="chart-levels-grid"></div>
+
+      <!-- AI Stock Analysis Box -->
+      <div class="ai-analysis-card" id="chart-ai-box"></div>
+    </section>
+
+    <!-- TAB 3: WATCHLIST -->
+    <section class="tab-content" id="tab-watchlist">
+      <div class="journal-header">
+        <div class="journal-title-box">
+          <h2>⭐ My High-Conviction Watchlist</h2>
+          <p>Personalized stock monitor with live institutional Order Block alerts.</p>
+        </div>
+      </div>
+      <div class="pnl-chart-card">
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;" id="watchlist-items-grid"></div>
+      </div>
+    </section>
+
+    <!-- TAB 4: TRADING JOURNAL -->
     <section class="tab-content" id="tab-journal">
       <div class="journal-header">
         <div class="journal-title-box">
@@ -1124,50 +1275,43 @@
         </div>
       </div>
 
-      <!-- 8 KPI Metrics Grid (Exact match with user screenshot 2!) -->
+      <!-- 8 KPI Metrics Grid -->
       <div class="journal-stats-grid">
         <div class="journal-stat-card">
           <div class="stat-label">Win rate</div>
           <div class="stat-value" style="color: var(--green-neon);">68.4%</div>
           <div class="stat-subtext">38 wins of 55 trades</div>
         </div>
-
         <div class="journal-stat-card">
           <div class="stat-label">Profit factor</div>
           <div class="stat-value" style="color: var(--cyan);">2.42</div>
           <div class="stat-subtext">₹245K won · ₹101K lost</div>
         </div>
-
         <div class="journal-stat-card">
           <div class="stat-label">Expectancy</div>
           <div class="stat-value" style="color: var(--green-neon);">+₹ 2,641</div>
           <div class="stat-subtext">Per trade statistical edge</div>
         </div>
-
         <div class="journal-stat-card">
           <div class="stat-label">Avg win / loss</div>
           <div class="stat-value">₹6.4K / ₹2.6K</div>
           <div class="stat-subtext">2.46x Payoff Ratio</div>
         </div>
-
         <div class="journal-stat-card">
           <div class="stat-label">Max drawdown</div>
           <div class="stat-value" style="color: var(--red-neon);">-6.8%</div>
           <div class="stat-subtext">Bottomed July 2026</div>
         </div>
-
         <div class="journal-stat-card">
           <div class="stat-label">Best day</div>
           <div class="stat-value" style="color: var(--green-neon);">+₹ 18,500</div>
           <div class="stat-subtext">Wed, August 14</div>
         </div>
-
         <div class="journal-stat-card">
           <div class="stat-label">Worst day</div>
           <div class="stat-value" style="color: var(--red-neon);">-₹ 6,200</div>
           <div class="stat-subtext">Mon, June 03</div>
         </div>
-
         <div class="journal-stat-card">
           <div class="stat-label">Current streak</div>
           <div class="stat-value" style="color: var(--green-neon);">4 WINS</div>
@@ -1176,9 +1320,7 @@
       </div>
     </section>
 
-    <!-- =========================================================================
-         TAB 3: MONEY FLOW
-         ========================================================================= -->
+    <!-- TAB 5: MONEY FLOW -->
     <section class="tab-content" id="tab-moneyflow">
       <div class="journal-header">
         <div class="journal-title-box">
@@ -1193,9 +1335,7 @@
       </div>
     </section>
 
-    <!-- =========================================================================
-         TAB 4: OPTION PULSE
-         ========================================================================= -->
+    <!-- TAB 6: OPTION PULSE -->
     <section class="tab-content" id="tab-options">
       <div class="journal-header">
         <div class="journal-title-box">
@@ -1232,9 +1372,7 @@
       </div>
     </section>
 
-    <!-- =========================================================================
-         TAB 5: STOCK RADAR
-         ========================================================================= -->
+    <!-- TAB 7: STOCK RADAR -->
     <section class="tab-content" id="tab-radar">
       <div class="journal-header">
         <div class="journal-title-box">
@@ -1243,13 +1381,28 @@
         </div>
       </div>
       <div class="pnl-chart-card" id="radar-cards-container">
-        <!-- Rendered dynamically -->
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px;">
+          <div class="journal-stat-card" style="border-left: 4px solid var(--green-neon);">
+            <div class="stat-label" style="color: var(--green-neon);">🟢 TVSMOTOR — ORB-15 Breakout</div>
+            <p style="font-size: 12px; color: #cbd5e1; margin-top: 6px;">Broke morning 15-minute high with 2.4x volume surge. Confluence above institutional VWAP ₹2410.</p>
+          </div>
+          <div class="journal-stat-card" style="border-left: 4px solid var(--green-neon);">
+            <div class="stat-label" style="color: var(--green-neon);">🟢 INOXWIND — SMC Order Block Mitigation</div>
+            <p style="font-size: 12px; color: #cbd5e1; margin-top: 6px;">Tested H4 Demand Order Block ₹168-172 with long lower wick and strong buyer displacement.</p>
+          </div>
+          <div class="journal-stat-card" style="border-left: 4px solid var(--red-neon);">
+            <div class="stat-label" style="color: var(--red-neon);">🔴 ANANDRATHI — Supply Block Rejection</div>
+            <p style="font-size: 12px; color: #cbd5e1; margin-top: 6px;">Failed at resistance zone ₹4050 with expanding short buildup contracts (+11.2% OI).</p>
+          </div>
+          <div class="journal-stat-card" style="border-left: 4px solid var(--cyan);">
+            <div class="stat-label" style="color: var(--cyan);">⚡ CUMMINSIND — Short Squeeze Covering</div>
+            <p style="font-size: 12px; color: #cbd5e1; margin-top: 6px;">OI decreased -4.2% while price gained +1.88%, signaling trapped bears closing positions.</p>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- =========================================================================
-         TAB 6: CALM ZONE
-         ========================================================================= -->
+    <!-- TAB 8: CALM ZONE -->
     <section class="tab-content" id="tab-calm">
       <div class="journal-header">
         <div class="journal-title-box">
@@ -1281,9 +1434,7 @@
       </div>
     </section>
 
-    <!-- =========================================================================
-         TAB 7: LIQUIDITY MAP
-         ========================================================================= -->
+    <!-- TAB 9: LIQUIDITY MAP -->
     <section class="tab-content" id="tab-liquidity">
       <div class="journal-header">
         <div class="journal-title-box">
@@ -1291,14 +1442,21 @@
           <p>Clusters of Buy-Side Liquidity (BSL) and Sell-Side Liquidity (SSL) pools.</p>
         </div>
       </div>
-      <div class="pnl-chart-card" id="liquidity-map-view">
-        <!-- Rendered via JS -->
+      <div class="pnl-chart-card">
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div class="journal-stat-card" style="border-left: 4px solid var(--green-neon);">
+            <div class="stat-label" style="color: var(--green-neon);">Buy-Side Liquidity (BSL) Cluster</div>
+            <p style="font-size: 13px; color: #cbd5e1; margin-top: 4px;\">NIFTY 25,350 – 25,400 (Estimated ₹1,850 Cr resting buy stops).</p>
+          </div>
+          <div class="journal-stat-card" style="border-left: 4px solid var(--red-neon);">
+            <div class="stat-label" style="color: var(--red-neon);">Sell-Side Liquidity (SSL) Cluster</div>
+            <p style="font-size: 13px; color: #cbd5e1; margin-top: 4px;\">NIFTY 24,980 – 25,020 (Estimated ₹2,120 Cr resting sell stops).</p>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- =========================================================================
-         TAB 8: OI FLOW
-         ========================================================================= -->
+    <!-- TAB 10: OI FLOW -->
     <section class="tab-content" id="tab-oiflow">
       <div class="journal-header">
         <div class="journal-title-box">
@@ -1326,9 +1484,7 @@
       </div>
     </section>
 
-    <!-- =========================================================================
-         TAB 9: RSI SCREENER
-         ========================================================================= -->
+    <!-- TAB 11: RSI SCREENER -->
     <section class="tab-content" id="tab-rsi">
       <div class="journal-header">
         <div class="journal-title-box">
@@ -1336,14 +1492,10 @@
           <p>Screens stocks across Overbought (>65), Oversold (<35), and Bullish Zones.</p>
         </div>
       </div>
-      <div class="pnl-chart-card" id="rsi-screener-view">
-        <!-- Rendered via JS -->
-      </div>
+      <div class="pnl-chart-card" id="rsi-screener-view"></div>
     </section>
 
-    <!-- =========================================================================
-         TAB 10: F&O ACADEMY
-         ========================================================================= -->
+    <!-- TAB 12: F&O ACADEMY -->
     <section class="tab-content" id="tab-academy">
       <div class="journal-header">
         <div class="journal-title-box">
@@ -1351,15 +1503,13 @@
           <p>Curated learning modules on Smart Money Concepts, Greeks, and Quantitative Execution.</p>
         </div>
       </div>
-      <div id="academy-modules-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-        <!-- Rendered via JS -->
-      </div>
+      <div id="academy-modules-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;"></div>
     </section>
 
   </main>
 </div>
 
-<!-- Stock Details Modal -->
+<!-- Stock Details Modal with TradingView Candlestick Chart -->
 <div class="modal-overlay" id="stockModal" onclick="closeModal(event)">
   <div class="modal-box" onclick="event.stopPropagation()">
     <button class="close-modal-btn" onclick="closeModal()">&times;</button>
@@ -1368,8 +1518,12 @@
 </div>
 
 <script>
-  // Global State
   let currentTab = 'tab-orderblock';
+  let dedicatedChartObj = null;
+  let modalChartObj = null;
+  let activeDedicatedTicker = 'TVSMOTOR';
+  let activeDedicatedTf = 'Daily';
+  let watchlistSet = new Set(['TVSMOTOR', 'INOXWIND', 'EICHERMOT', 'RBLBANK', 'ANANDRATHI', 'HINDPETRO']);
 
   function toggleSidebar() {
     const sb = document.getElementById('sidebar');
@@ -1383,7 +1537,6 @@
     const targetTab = document.getElementById(tabId);
     if (targetTab) targetTab.classList.add('active');
 
-    // Highlight nav item
     const navItems = document.querySelectorAll('.nav-item');
     navItems.forEach(item => {
       if (item.getAttribute('onclick')?.includes(tabId)) {
@@ -1392,36 +1545,64 @@
     });
 
     currentTab = tabId;
+
+    if (tabId === 'tab-chart') {
+      setTimeout(() => loadDedicatedChart(activeDedicatedTicker, activeDedicatedTf), 100);
+    } else if (tabId === 'tab-watchlist') {
+      renderWatchlist();
+    }
   }
 
-  // Load Live Data from Engine
   async function loadData() {
     try {
-      // 1. Load Sectors
+      // 1. Sectors
       const resSectors = await fetch('/api/v1/orderblock/sectors');
       const sectors = await resSectors.json();
       renderSectors(sectors);
 
-      // 2. Load Top Buys
+      // 2. Top Buys
       const resBuys = await fetch('/api/v1/orderblock/top-buys');
       const buys = await resBuys.json();
       renderStockList('top-buys-list', buys, 'bull');
 
-      // 3. Load Least Sells
+      // 3. Least Sells
       const resSells = await fetch('/api/v1/orderblock/least-sells');
       const sells = await resSells.json();
       renderStockList('least-sells-list', sells, 'bear');
 
-      // 4. Load Option Pulse
-      const resOptions = await fetch('/api/v1/orderblock/option-pulse');
-      const optionsData = await resOptions.json();
-      renderOptionsChart(optionsData);
+      // 4. Alerts
+      loadAlerts();
 
-      // 5. Load RSI & Academy
+      // 5. RSI & Academy
       loadRSIAndAcademy();
     } catch (e) {
-      console.warn("Backend API fetching fallback:", e);
+      console.warn('API error:', e);
     }
+  }
+
+  async function loadAlerts() {
+    try {
+      const res = await fetch('/api/v1/orderblock/alerts');
+      const alerts = await res.json();
+      if (alerts && alerts.length > 0) {
+        let idx = 0;
+        const updateAlert = () => {
+          const a = alerts[idx % alerts.length];
+          const badge = document.getElementById('alert-type');
+          const msg = document.getElementById('alert-msg');
+          const conf = document.getElementById('alert-conf');
+          if (badge) {
+            badge.innerText = a.type;
+            badge.className = 'alert-badge ' + (a.sentiment === 'bearish' ? 'bearish' : '');
+          }
+          if (msg) msg.innerText = a.message;
+          if (conf) conf.innerText = a.confidence + '% Confidence';
+          idx++;
+        };
+        updateAlert();
+        setInterval(updateAlert, 5000);
+      }
+    } catch (e) {}
   }
 
   function renderSectors(sectors) {
@@ -1445,7 +1626,7 @@
     const container = document.getElementById(containerId);
     if (!container) return;
     let html = '';
-    stocks.forEach((s, idx) => {
+    stocks.forEach(s => {
       const isBull = type === 'bull';
       const badgeCls = s.buildup_status === 'LONG BUILD-UP' ? 'badge-long-buildup' :
                        (s.buildup_status === 'SHORT COVERING' ? 'badge-short-covering' :
@@ -1472,6 +1653,287 @@
       `;
     });
     container.innerHTML = html;
+  }
+
+  // Dedicated TradingView Chart Terminal
+  async function loadDedicatedChart(ticker, tf = 'Daily') {
+    activeDedicatedTicker = ticker;
+    activeDedicatedTf = tf;
+    const container = document.getElementById('tv-main-chart');
+    if (!container) return;
+    container.innerHTML = '';
+
+    try {
+      const res = await fetch(`/api/v1/orderblock/stock/${ticker}?timeframe=${tf}`);
+      const data = await res.json();
+
+      if (window.LightweightCharts) {
+        dedicatedChartObj = LightweightCharts.createChart(container, {
+          width: container.clientWidth,
+          height: 420,
+          layout: {
+            backgroundColor: '#0c121e',
+            textColor: '#94a3b8',
+            fontSize: 11,
+            fontFamily: 'JetBrains Mono',
+          },
+          grid: {
+            vertLines: { color: 'rgba(255, 255, 255, 0.04)' },
+            horzLines: { color: 'rgba(255, 255, 255, 0.04)' },
+          },
+          crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
+          priceScale: { borderColor: 'rgba(255, 255, 255, 0.08)' },
+          timeScale: { borderColor: 'rgba(255, 255, 255, 0.08)' },
+        });
+
+        const candleSeries = dedicatedChartObj.addCandlestickSeries({
+          upColor: '#10b981',
+          downColor: '#ef4444',
+          borderVisible: false,
+          wickUpColor: '#10b981',
+          wickDownColor: '#ef4444',
+        });
+
+        candleSeries.setData(data.candles);
+        if (data.markers && candleSeries.setMarkers) {
+          candleSeries.setMarkers(data.markers);
+        }
+
+        const volumeSeries = dedicatedChartObj.addHistogramSeries({
+          color: '#26a69a',
+          priceFormat: { type: 'volume' },
+          priceScaleId: '',
+          scaleMargins: { top: 0.82, bottom: 0 },
+        });
+
+        const volData = data.candles.map(c => ({
+          time: c.time,
+          value: c.volume,
+          color: c.close >= c.open ? 'rgba(16, 185, 129, 0.35)' : 'rgba(239, 68, 68, 0.35)',
+        }));
+        volumeSeries.setData(volData);
+
+        window.addEventListener('resize', () => {
+          if (dedicatedChartObj && container) {
+            dedicatedChartObj.applyOptions({ width: container.clientWidth });
+          }
+        });
+      }
+
+      // Update Key Metrics Grid
+      const levelsGrid = document.getElementById('chart-levels-grid');
+      if (levelsGrid) {
+        levelsGrid.innerHTML = `
+          <div class="journal-stat-card">
+            <div class="stat-label">Entry Price</div>
+            <div class="stat-value" style="color: var(--cyan);">₹${data.entry_price.toFixed(2)}</div>
+            <div class="stat-subtext">Risk:Reward ${data.risk_reward}</div>
+          </div>
+          <div class="journal-stat-card">
+            <div class="stat-label">Support 1 & 2</div>
+            <div class="stat-value" style="color: var(--green-neon);">₹${data.support_1} / ₹${data.support_2}</div>
+            <div class="stat-subtext">Demand Order Block Zone</div>
+          </div>
+          <div class="journal-stat-card">
+            <div class="stat-label">Resistance 1 & 2</div>
+            <div class="stat-value" style="color: var(--red-neon);">₹${data.resistance_1} / ₹${data.resistance_2}</div>
+            <div class="stat-subtext">Target T1 ₹${data.target_1}</div>
+          </div>
+          <div class="journal-stat-card">
+            <div class="stat-label">Confidence Score</div>
+            <div class="stat-value" style="color: var(--green-neon);">${data.confidence_score}%</div>
+            <div class="stat-subtext">Institutional Conviction</div>
+          </div>
+        `;
+      }
+
+      // Update AI Box
+      const aiBox = document.getElementById('chart-ai-box');
+      if (aiBox) {
+        aiBox.innerHTML = `
+          <div class="ai-analysis-header">
+            <span>🤖</span>
+            <span>Grounded AI Quantitative Analysis & SMC Order Block Insights</span>
+          </div>
+          <p class="ai-analysis-text">${data.ai_explanation}</p>
+        `;
+      }
+    } catch (e) {
+      console.warn('Dedicated chart load failed:', e);
+    }
+  }
+
+  function switchDedicatedTf(tf, btn) {
+    document.querySelectorAll('#main-tf-row .tf-pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    loadDedicatedChart(activeDedicatedTicker, tf);
+  }
+
+  // Stock Modal with TradingView Candlestick Chart
+  async function openStockModal(ticker) {
+    const modal = document.getElementById('stockModal');
+    const content = document.getElementById('modal-content');
+    modal.style.display = 'flex';
+
+    content.innerHTML = `<div style="padding: 30px; text-align: center; color: var(--text-dim);">Loading ${ticker} institutional profile & TradingView chart...</div>`;
+
+    try {
+      const res = await fetch(`/api/v1/orderblock/stock/${ticker}`);
+      const data = await res.json();
+      const isBull = data.change_pct >= 0;
+      const isStarred = watchlistSet.has(data.ticker);
+
+      content.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <h3 style="font-size: 20px; color: #fff; font-weight: 800;">${data.ticker}</h3>
+              <span class="badge-buildup ${isBull ? 'badge-long-buildup' : 'badge-short-buildup'}">${data.buildup_status}</span>
+              <span style="background: rgba(56, 189, 248, 0.15); color: var(--cyan); padding: 2px 7px; border-radius: 4px; font-size: 11px; font-weight: 700;">${data.confidence_score}% Conviction</span>
+            </div>
+            <p style="font-size: 11px; color: var(--text-dim); margin-top: 2px;">${data.company_name} · ${data.sector} Sector</p>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 20px; font-weight: 800; font-family: 'JetBrains Mono';" class="${isBull ? 'val-positive' : 'val-negative'}">₹${data.price.toFixed(2)}</div>
+            <div style="font-size: 11px; font-weight: 700;" class="${isBull ? 'val-positive' : 'val-negative'}">${isBull ? '+' : ''}${data.change_pct.toFixed(2)}%</div>
+          </div>
+        </div>
+
+        <!-- Timeframe Selectors -->
+        <div class="tf-selector-row">
+          <button class="tf-pill" onclick="reloadModalChart('${data.ticker}', '1m', this)">1m</button>
+          <button class="tf-pill" onclick="reloadModalChart('${data.ticker}', '5m', this)">5m</button>
+          <button class="tf-pill" onclick="reloadModalChart('${data.ticker}', '15m', this)">15m</button>
+          <button class="tf-pill" onclick="reloadModalChart('${data.ticker}', '1h', this)">1h</button>
+          <button class="tf-pill" onclick="reloadModalChart('${data.ticker}', '4h', this)">4h</button>
+          <button class="tf-pill active" onclick="reloadModalChart('${data.ticker}', 'Daily', this)">Daily</button>
+        </div>
+
+        <!-- TradingView Candlestick Container inside Modal -->
+        <div id="modalTvChart" style="height: 290px; width: 100%; border-radius: 8px; overflow: hidden; margin-bottom: 14px;"></div>
+
+        <!-- SMC Levels Grid -->
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 12px;">
+          <div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px;">
+            <div class="stat-label">Entry Price</div>
+            <div style="font-family: 'JetBrains Mono'; color: var(--cyan); font-weight: 700; font-size: 14px;">₹${data.entry_price.toFixed(2)}</div>
+            <div class="stat-subtext">SL: ₹${data.stop_loss.toFixed(2)}</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px;">
+            <div class="stat-label">Target 1 / 2</div>
+            <div style="font-family: 'JetBrains Mono'; color: var(--green-neon); font-weight: 700; font-size: 14px;">₹${data.target_1.toFixed(2)}</div>
+            <div class="stat-subtext">T2: ₹${data.target_2.toFixed(2)}</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px;">
+            <div class="stat-label">VWAP & OI</div>
+            <div style="font-family: 'JetBrains Mono'; font-weight: 700; font-size: 14px;">₹${data.vwap.toFixed(2)}</div>
+            <div class="stat-subtext">${data.open_interest}</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px;">
+            <div class="stat-label">Risk : Reward</div>
+            <div style="font-family: 'JetBrains Mono'; color: var(--green-neon); font-weight: 700; font-size: 14px;">${data.risk_reward}</div>
+            <div class="stat-subtext">Zone: ₹${data.trading_zone[0]} - ${data.trading_zone[1]}</div>
+          </div>
+        </div>
+
+        <!-- AI Grounded Explanation -->
+        <div class="ai-analysis-card">
+          <div class="ai-analysis-header">
+            <span>🤖</span>
+            <span>Why is this stock ${isBull ? 'Bullish' : 'Bearish'}? (AI Grounded Explanation)</span>
+          </div>
+          <p class="ai-analysis-text">${data.ai_explanation}</p>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-top: 14px;">
+          <button class="unlock-btn" style="flex: 1; justify-content: center; background: rgba(255,255,255,0.08); border: 1px solid var(--border-hover);" onclick="toggleWatchlist('${data.ticker}')">
+            <span>${isStarred ? '★ In Watchlist' : '☆ Add to Watchlist'}</span>
+          </button>
+          <button class="unlock-btn" style="flex: 1; justify-content: center;" onclick="alert('Simulated paper order triggered for ${data.ticker} at entry ₹${data.entry_price}!'); closeModal();">
+            <span>⚡ Paper Trade ${data.ticker}</span>
+          </button>
+        </div>
+      `;
+
+      // Render Modal Lightweight Chart
+      setTimeout(() => {
+        const modalChartContainer = document.getElementById('modalTvChart');
+        if (modalChartContainer && window.LightweightCharts) {
+          modalChartContainer.innerHTML = '';
+          modalChartObj = LightweightCharts.createChart(modalChartContainer, {
+            width: modalChartContainer.clientWidth,
+            height: 290,
+            layout: {
+              backgroundColor: '#0c121e',
+              textColor: '#94a3b8',
+              fontSize: 10,
+              fontFamily: 'JetBrains Mono',
+            },
+            grid: {
+              vertLines: { color: 'rgba(255, 255, 255, 0.04)' },
+              horzLines: { color: 'rgba(255, 255, 255, 0.04)' },
+            },
+            priceScale: { borderColor: 'rgba(255, 255, 255, 0.08)' },
+            timeScale: { borderColor: 'rgba(255, 255, 255, 0.08)' },
+          });
+
+          const candleSeries = modalChartObj.addCandlestickSeries({
+            upColor: '#10b981',
+            downColor: '#ef4444',
+            borderVisible: false,
+            wickUpColor: '#10b981',
+            wickDownColor: '#ef4444',
+          });
+          candleSeries.setData(data.candles);
+          if (data.markers && candleSeries.setMarkers) {
+            candleSeries.setMarkers(data.markers);
+          }
+        }
+      }, 50);
+
+    } catch (e) {
+      content.innerHTML = `<div style="padding: 30px; color: var(--red-neon);">Failed to load profile.</div>`;
+    }
+  }
+
+  function reloadModalChart(ticker, tf, btn) {
+    document.querySelectorAll('.modal-box .tf-pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    openStockModal(ticker);
+  }
+
+  function closeModal() {
+    document.getElementById('stockModal').style.display = 'none';
+  }
+
+  function toggleWatchlist(ticker) {
+    if (watchlistSet.has(ticker)) {
+      watchlistSet.delete(ticker);
+    } else {
+      watchlistSet.add(ticker);
+    }
+    const badge = document.getElementById('watchlist-badge');
+    if (badge) badge.innerText = watchlistSet.size;
+    openStockModal(ticker);
+  }
+
+  function renderWatchlist() {
+    const grid = document.getElementById('watchlist-items-grid');
+    if (!grid) return;
+    let html = '';
+    watchlistSet.forEach(ticker => {
+      html += `
+        <div class="journal-stat-card" style="cursor: pointer;" onclick="openStockModal('${ticker}')">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-weight: 800; font-size: 14px; color: #fff;">${ticker}</span>
+            <span style="color: #facc15; font-size: 14px;">★</span>
+          </div>
+          <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Tracked for SMC Breakout</div>
+          <button class="time-pill active" style="margin-top: 8px; width: 100%;" onclick="event.stopPropagation(); loadDedicatedChart('${ticker}'); switchTab('tab-chart');">View TradingView Chart</button>
+        </div>
+      `;
+    });
+    grid.innerHTML = html;
   }
 
   // Journal PnL Chart
@@ -1521,69 +1983,6 @@
     });
   }
 
-  // Option Pulse Strike OI Chart
-  function renderOptionsChart(data) {
-    const ctx = document.getElementById('optionsChart');
-    if (!ctx || !data.strikes) return;
-
-    const labels = data.strikes.map(s => s.strike);
-    const callOI = data.strikes.map(s => s.call_oi);
-    const putOI = data.strikes.map(s => s.put_oi);
-
-    new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: labels,
-        datasets: [
-          { label: 'Call OI (Resistance)', data: callOI, backgroundColor: 'rgba(239, 68, 68, 0.75)' },
-          { label: 'Put OI (Support)', data: putOI, backgroundColor: 'rgba(16, 185, 129, 0.75)' },
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { labels: { color: '#94a3b8' } } },
-        scales: {
-          x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b' } },
-          y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b' } }
-        }
-      }
-    });
-  }
-
-  // Stock Modal
-  function openStockModal(ticker) {
-    const modal = document.getElementById('stockModal');
-    const content = document.getElementById('modal-content');
-    modal.style.display = 'flex';
-
-    content.innerHTML = `
-      <div style="margin-bottom: 14px;">
-        <h3 style="font-size: 18px; color: #fff;">${ticker} — Institutional Order Block Profile</h3>
-        <p style="font-size: 11px; color: var(--text-dim);">NSE F&O Liquid Universe</p>
-      </div>
-      <div style="background: rgba(255,255,255,0.03); padding: 14px; border-radius: 8px; margin-bottom: 12px;">
-        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-          <span style="font-size: 12px; color: var(--text-muted);">Current Bias</span>
-          <span class="badge-buildup badge-long-buildup">INSTITUTIONAL ACCUMULATION</span>
-        </div>
-        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-          <span style="font-size: 12px; color: var(--text-muted);">Order Block Retest Zone</span>
-          <span style="font-family: 'JetBrains Mono'; color: var(--cyan); font-weight: 700;">₹ 2,410.00 – ₹ 2,430.00</span>
-        </div>
-        <div style="display: flex; justify-content: space-between;">
-          <span style="font-size: 12px; color: var(--text-muted);">Optimal Risk:Reward</span>
-          <span style="font-family: 'JetBrains Mono'; color: var(--green-neon); font-weight: 700;">2.4:1</span>
-        </div>
-      </div>
-      <button class="unlock-btn" style="width: 100%; justify-content: center;" onclick="closeModal()">Close Profile</button>
-    `;
-  }
-
-  function closeModal() {
-    document.getElementById('stockModal').style.display = 'none';
-  }
-
   function loadRSIAndAcademy() {
     const rsiBox = document.getElementById('rsi-screener-view');
     if (rsiBox) {
@@ -1627,7 +2026,23 @@
     }
   }
 
-  // Initialize on load
+  function handleSearch(val) {
+    if (!val) return;
+    const upper = val.toUpperCase().trim();
+    const allCards = document.querySelectorAll('.stock-card');
+    allCards.forEach(card => {
+      const text = card.innerText.toUpperCase();
+      card.style.display = text.includes(upper) ? 'block' : 'none';
+    });
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      e.preventDefault();
+      document.getElementById('global-search').focus();
+    }
+  });
+
   document.addEventListener('DOMContentLoaded', () => {
     loadData();
     initJournalChart();
