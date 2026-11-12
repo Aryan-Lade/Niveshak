@@ -18,7 +18,10 @@ from typing import Any, Dict, List, Optional
 from fastapi import Depends, FastAPI, HTTPException, Header, Query, WebSocket, WebSocketDisconnect, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 
+from stock_engine.analytics.lessons import course_outline
+from stock_engine.analytics.market_engine import MarketEngine
 from stock_engine.analytics.orderblock_engine import OrderBlockEngine
 
 from stock_engine.api.schemas import (
@@ -73,6 +76,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Static assets for Niveshak Web Terminal
+ui_app_dir = Path(__file__).parent.parent / "ui" / "app"
+if ui_app_dir.exists():
+    app.mount("/ui", StaticFiles(directory=str(ui_app_dir)), name="ui")
 
 
 def verify_api_key(x_api_key: Optional[str] = Header(None)) -> str:
@@ -456,7 +464,10 @@ def plan_portfolio_rebalance(
     """
     broker = PaperBroker(db_path=DB_PATH)
     current_cash = broker.get_cash()
-    current_positions = {p.ticker: p.quantity for p in broker.get_positions()}
+    held_positions = broker.get_positions()
+    if isinstance(held_positions, dict):
+        held_positions = list(held_positions.values())
+    current_positions = {p.ticker: p.quantity for p in held_positions}
 
     market_prices = req.market_prices or {}
     for ticker in list(req.target_weights.keys()) + list(current_positions.keys()):
@@ -543,16 +554,57 @@ async def websocket_ticks(websocket: WebSocket, ticker: str):
 # Niveshak Flow Terminal Endpoints (order-block.com Architecture)
 # ==============================================================================
 
+@app.get("/", response_class=HTMLResponse, tags=["Niveshak Flow"])
 @app.get("/niveshak", response_class=HTMLResponse, tags=["Niveshak Flow"])
 @app.get("/orderblock", response_class=HTMLResponse, tags=["Niveshak Flow"])
 @app.get("/app", response_class=HTMLResponse, tags=["Niveshak Flow"])
 def serve_orderblock_app():
-    """Serves the standalone Niveshak institutional flow web application."""
-    from dataclasses import asdict
+    """Serves the standalone Niveshak market terminal."""
+    ui_app_index = Path(__file__).parent.parent / "ui" / "app" / "index.html"
+    if ui_app_index.exists():
+        return HTMLResponse(content=ui_app_index.read_text(encoding="utf-8"))
     html_file = Path(__file__).parent.parent / "ui" / "orderblock.html"
     if html_file.exists():
         return HTMLResponse(content=html_file.read_text(encoding="utf-8"))
     return HTMLResponse(content="<h1>Niveshak UI Initializing...</h1>")
+
+
+@app.get("/legacy", response_class=HTMLResponse, tags=["Niveshak Flow"])
+def serve_legacy_app():
+    """Serves the standalone OrderBlock institutional flow terminal."""
+    html_file = Path(__file__).parent.parent / "ui" / "orderblock.html"
+    if html_file.exists():
+        return HTMLResponse(content=html_file.read_text(encoding="utf-8"))
+    return HTMLResponse(content="<h1>Niveshak Legacy UI Initializing...</h1>")
+
+
+@app.get("/api/v1/niveshak/snapshot", tags=["Niveshak Flow"])
+def get_niveshak_snapshot(at: Optional[str] = None):
+    """Returns the market session snapshot for all 207 F&O stocks, breadth, sectors, and boards."""
+    engine = MarketEngine()
+    try:
+        return engine.snapshot(at=at)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.get("/api/v1/niveshak/stocks/{symbol:path}", tags=["Niveshak Flow"])
+def get_niveshak_stock_detail(symbol: str, at: Optional[str] = None):
+    """Returns 5m and daily candles, SMC levels, and strength breakdown for a symbol."""
+    engine = MarketEngine()
+    try:
+        detail = engine.stock(symbol, at=at)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    if detail is None:
+        raise HTTPException(status_code=404, detail=f"Stock '{symbol}' not found in universe")
+    return detail
+
+
+@app.get("/api/v1/niveshak/lessons", tags=["Niveshak Flow"])
+def get_niveshak_lessons():
+    """Returns the 12 lesson curriculum for the Learn section."""
+    return course_outline()
 
 
 @app.get("/api/v1/niveshak/sectors", tags=["Niveshak Flow"])
