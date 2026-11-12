@@ -566,20 +566,20 @@ def get_orderblock_sectors():
 
 @app.get("/api/v1/niveshak/top-buys", tags=["Niveshak Flow"])
 @app.get("/api/v1/orderblock/top-buys", tags=["Niveshak Flow"])
-def get_orderblock_top_buys():
-    """Returns Top 10 stocks undergoing aggressive institutional buying / Long Buildup."""
+def get_orderblock_top_buys(limit: int = 15):
+    """Returns Top stocks undergoing aggressive institutional buying / Long Buildup."""
     from dataclasses import asdict
     engine = OrderBlockEngine()
-    return [asdict(s) for s in engine.get_top_10_buy_stocks()]
+    return [asdict(s) for s in engine.get_top_10_buy_stocks(limit=limit)]
 
 
 @app.get("/api/v1/niveshak/least-sells", tags=["Niveshak Flow"])
 @app.get("/api/v1/orderblock/least-sells", tags=["Niveshak Flow"])
-def get_orderblock_least_sells():
-    """Returns Least / Top 10 stocks undergoing institutional distribution / Short Buildup."""
+def get_orderblock_least_sells(limit: int = 15):
+    """Returns Top stocks undergoing institutional distribution / Short Buildup."""
     from dataclasses import asdict
     engine = OrderBlockEngine()
-    return [asdict(s) for s in engine.get_least_10_sell_stocks()]
+    return [asdict(s) for s in engine.get_least_10_sell_stocks(limit=limit)]
 
 
 @app.get("/api/v1/niveshak/breadth", tags=["Niveshak Flow"])

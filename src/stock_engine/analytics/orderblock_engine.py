@@ -121,14 +121,19 @@ class OrderBlockEngine:
             ("ABCAPITAL", "NBFC", 232.10, 3.27, 6.5, "LONG BUILD-UP", 4, 1.6, (226.0, 230.0), 81.0, 61.2),
             ("AUROPHARMA", "PHARMA", 1420.00, 2.92, 5.9, "LONG BUILD-UP", 4, 1.5, (1390.0, 1410.0), 79.5, 59.8),
             ("COFORGE", "IT", 6850.00, 2.95, 6.1, "LONG BUILD-UP", 4, 1.7, (6720.0, 6800.0), 82.0, 62.4),
+            ("INDIANB", "PSU BANK", 542.00, 2.72, 5.8, "LONG BUILD-UP", 4, 1.6, (530.0, 538.0), 80.5, 60.1),
             ("MPHASIS", "IT", 2980.00, 2.46, 5.2, "LONG BUILD-UP", 4, 1.4, (2920.0, 2960.0), 78.0, 58.9),
             ("FEDERALBNK", "BANK", 198.40, 2.08, 4.8, "LONG BUILD-UP", 4, 1.5, (194.0, 197.0), 76.5, 57.2),
             ("CUMMINSIND", "CAP GOODS", 3680.00, 1.88, -4.2, "SHORT COVERING", 4, 1.4, (3620.0, 3660.0), 75.0, 56.4),
+            ("NHPC", "POWER", 94.60, 1.87, 5.1, "LONG BUILD-UP", 4, 1.5, (92.0, 93.8), 77.0, 58.0),
             ("KPITTECH", "IT", 1640.00, 1.70, 3.8, "LONG BUILD-UP", 3, 1.3, (1610.0, 1630.0), 73.0, 55.1),
+            ("GLENMARK", "PHARMA", 1680.00, 1.65, 4.0, "LONG BUILD-UP", 4, 1.4, (1650.0, 1670.0), 75.5, 56.2),
             ("M&M", "AUTO", 2910.00, 1.64, 4.1, "LONG BUILD-UP", 4, 1.4, (2870.0, 2900.0), 77.0, 56.8),
             ("DRREDDY", "PHARMA", 6540.00, 1.44, 3.2, "LONG BUILD-UP", 3, 1.2, (6480.0, 6520.0), 71.0, 54.3),
             ("CANBK", "PSU BANK", 108.50, 1.41, 4.5, "LONG BUILD-UP", 3, 1.3, (106.0, 108.0), 72.5, 55.6),
+            ("ITC", "FMCG", 472.00, 1.35, 3.5, "LONG BUILD-UP", 3, 1.3, (465.0, 470.0), 74.0, 56.0),
             ("SUZLON", "POWER", 64.20, 1.35, 6.8, "LONG BUILD-UP", 4, 1.6, (62.5, 63.8), 79.0, 58.2),
+            ("COLPAL", "FMCG", 3280.00, 1.75, 4.2, "LONG BUILD-UP", 4, 1.4, (3240.0, 3270.0), 76.0, 57.5),
             ("TATAELXSI", "IT", 7450.00, 1.15, 2.9, "LONG BUILD-UP", 3, 1.2, (7380.0, 7420.0), 69.5, 53.8),
             ("RELIANCE", "OIL & GAS", 2560.00, 1.25, 3.6, "LONG BUILD-UP", 4, 1.5, (2530.0, 2550.0), 80.0, 58.0),
             ("TCS", "IT", 3870.00, 1.10, 2.8, "LONG BUILD-UP", 3, 1.2, (3840.0, 3860.0), 72.0, 54.0),
@@ -136,15 +141,21 @@ class OrderBlockEngine:
 
             # Top Bearish (Heavy Selling / Short Buildup & Long Unwinding)
             ("ANANDRATHI", "CAP MKTS", 3920.00, -4.68, 11.2, "SHORT BUILD-UP", 5, 2.3, (3980.0, 4050.0), 22.0, 28.5),
+            ("AMBER", "CONSUMER", 5420.00, -2.68, 7.8, "SHORT BUILD-UP", 4, 1.9, (5510.0, 5580.0), 25.0, 31.0),
+            ("FORTIS", "PHARMA", 485.00, -2.38, 6.9, "SHORT BUILD-UP", 4, 1.7, (494.0, 502.0), 27.0, 32.5),
             ("HINDPETRO", "OIL & GAS", 374.50, -2.10, 8.4, "SHORT BUILD-UP", 4, 1.8, (382.0, 388.0), 28.5, 34.2),
             ("DMART", "CONSUMER", 3820.00, -1.98, -6.1, "LONG UNWINDING", 4, 1.6, (3890.0, 3940.0), 31.0, 36.1),
+            ("KFINTECH", "CAP MKTS", 985.00, -1.88, 5.4, "SHORT BUILD-UP", 4, 1.5, (1005.0, 1020.0), 30.5, 35.0),
             ("NAUKRI", "NEW-AGE", 6890.00, -1.66, 6.8, "SHORT BUILD-UP", 4, 1.5, (6980.0, 7050.0), 32.5, 37.4),
             ("PAYTM", "NEW-AGE", 784.00, -1.55, 7.2, "SHORT BUILD-UP", 4, 1.6, (798.0, 810.0), 29.0, 35.8),
             ("ANGELONE", "CAP MKTS", 2840.00, -1.45, 5.9, "SHORT BUILD-UP", 3, 1.4, (2890.0, 2930.0), 34.0, 38.2),
             ("DIVISLAB", "PHARMA", 5780.00, -1.25, -4.8, "LONG UNWINDING", 3, 1.3, (5850.0, 5910.0), 36.0, 39.5),
             ("TECHM", "IT", 1640.00, -1.10, 4.5, "SHORT BUILD-UP", 3, 1.3, (1670.0, 1690.0), 37.5, 41.2),
+            ("ASTRAL", "CAP GOODS", 1890.00, -0.89, 3.8, "SHORT BUILD-UP", 3, 1.2, (1920.0, 1945.0), 39.0, 42.0),
             ("GODREJCP", "FMCG", 1180.00, -0.52, 3.4, "SHORT BUILD-UP", 3, 1.2, (1195.0, 1210.0), 41.0, 43.8),
             ("SUPREMEIND", "CONSUMER", 4420.00, -0.27, -3.1, "LONG UNWINDING", 2, 1.1, (4460.0, 4490.0), 44.0, 46.2),
+            ("JUBLFOOD", "CONSUMER", 580.00, -1.35, 4.2, "SHORT BUILD-UP", 3, 1.3, (592.0, 602.0), 35.0, 38.0),
+            ("OFSS", "IT", 11200.00, -1.96, 5.6, "SHORT BUILD-UP", 4, 1.6, (11450.0, 11600.0), 29.5, 33.5),
         ]
 
         items = []
@@ -164,19 +175,19 @@ class OrderBlockEngine:
             ))
         return items
 
-    def get_top_10_buy_stocks(self) -> List[StockFlowItem]:
-        """Top 10 heavily accumulated stocks with highest institutional buying score."""
+    def get_top_10_buy_stocks(self, limit: int = 10) -> List[StockFlowItem]:
+        """Top accumulated stocks with highest institutional buying score."""
         stocks = self.get_stock_universe_flows()
-        buys = [s for s in stocks if s.change_pct > 0 and "BUILD-UP" in s.buildup_status or "COVERING" in s.buildup_status]
+        buys = [s for s in stocks if s.change_pct > 0 and ("BUILD-UP" in s.buildup_status or "COVERING" in s.buildup_status)]
         buys.sort(key=lambda x: (x.change_pct * 0.6) + (abs(x.oi_change_pct) * 0.4), reverse=True)
-        return buys[:10]
+        return buys[:limit]
 
-    def get_least_10_sell_stocks(self) -> List[StockFlowItem]:
-        """Least / Top 10 shorted stocks experiencing heavy distribution / dumping."""
+    def get_least_10_sell_stocks(self, limit: int = 10) -> List[StockFlowItem]:
+        """Top shorted stocks experiencing heavy distribution / dumping."""
         stocks = self.get_stock_universe_flows()
-        sells = [s for s in stocks if s.change_pct < 0 or "SHORT BUILD-UP" in s.buildup_status or "LONG UNWINDING" in s.buildup_status]
+        sells = [s for s in stocks if s.change_pct < 0 or ("SHORT BUILD-UP" in s.buildup_status or "LONG UNWINDING" in s.buildup_status)]
         sells.sort(key=lambda x: x.change_pct)
-        return sells[:10]
+        return sells[:limit]
 
     def get_market_breadth(self) -> Dict[str, Any]:
         """Market breadth: total advancing vs declining symbols in F&O universe."""
