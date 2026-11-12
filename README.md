@@ -532,11 +532,15 @@ flowchart LR
 8. **🎓 F&O Academy**: Quantitative curriculum covering Smart Money Concepts, Greeks, Volatility Surfaces, and 1% ATR position sizing.
 
 ### 2 Primary Modes of Operation:
-- **Standalone Niveshak Web Platform (`/niveshak` or `/orderblock`)**:
-  - Full-screen glassmorphic dark interface (`#060913`) matching the 4-column flow of `order-block.com/app/orderblock`.
-  - Collapsible sidebar (`<<` / `>>`), search bar with `Ctrl + K` hotkey, live market open indicator, and user profile switcher.
-  - Interactive SVG money flow streamlines with central POC liquidity hourglass.
-  - Interactive **Trading Journal** with Net P&L dual chart (Cumulative P&L vs Drawdown) and 8 quantitative KPI metric cards.
+- **Niveshak Web Terminal (`/niveshak`, also `/`, `/app`, `/orderblock`)** - source in `src/stock_engine/ui/app/`, data from `analytics/market_engine.py`:
+  - Own design and code (indigo, ivory and marigold; Anek typeface; light and dark themes), responsive from desktop to phone. No build step: plain ES modules and hand-drawn SVG charts.
+  - **Session ribbon**: advancing vs declining stocks across 09:15-15:30 IST. Drag it (or use the arrow keys) to replay the session on every screen.
+  - **Home**: breadth histogram, open-interest build-up mix, strongest bullish and bearish setups, sector lines, journal and lesson progress.
+  - **Flow**: market strip (one dot per stock), flow map (sector -> build-up class -> trending or choppy), bullish and bearish boards with pivots, order-block zone and a worked plan, and a sortable table of all 207 F&O stocks.
+  - **Stock detail**: 5-minute and daily candles with the zone and levels, a plain-language reading and the strength-score breakdown.
+  - **Journal, Learn (12 lessons), Community, Feedback, Settings**: stored in the browser for now (no accounts yet).
+  - Prices, volume and OI are **simulated** (one deterministic session per date) and labelled as such in the UI. Replace `simulate_day` in `market_engine.py` with a broker or vendor feed to go live.
+  - The original single-file terminal is still served at `/legacy`.
 - **Top 10 Buy & Least 10 Sell Market Analyzer**:
   - Instant ranking of the **Top 10 stocks undergoing aggressive institutional accumulation (Long Buildup)** with entry zones and S1/R1 levels.
   - Instant ranking of the **Least 10 stocks undergoing aggressive institutional dumping (Short Buildup)** with distribution zones.
@@ -593,7 +597,7 @@ python -m pytest tests/test_costs.py -v
 ```bash
 uvicorn src.stock_engine.api.main:app --reload --port 8000
 ```
-- **Niveshak Fullscreen Terminal**: `http://localhost:8000/niveshak` (or `http://localhost:8000/orderblock` / `http://localhost:8000/app`)
+- **Niveshak Web Terminal**: `http://localhost:8000/niveshak` (also `/`, `/app` and `/orderblock`; the original page is at `/legacy`)
 - **Interactive OpenAPI Documentation**: `http://localhost:8000/docs`
 
 ### 6. Launch the Streamlit Dashboard
