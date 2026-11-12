@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <title>Niveshak market terminal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anek+Devanagari:wdth,wght@75..125,500..800&family=Anek+Latin:wdth,wght@75..125,300..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/ui/css/app.css">
+  <script>
+    // Apply the saved theme before first paint so the page never flashes the wrong one.
+    (function () {
+      var theme = 'dark';
+      try {
+        var saved = JSON.parse(localStorage.getItem('niveshak.settings') || '{}').theme;
+        if (saved === 'light' || saved === 'dark') theme = saved;
+        else if (saved === 'system' && window.matchMedia('(prefers-color-scheme: light)').matches) theme = 'light';
+      } catch (e) { /* storage unavailable: keep the default */ }
+      document.documentElement.dataset.theme = theme;
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#view">Skip to content</a>
+
+  <div class="app" id="app">
+    <aside class="side" id="side" aria-label="Main navigation"></aside>
+    <div class="side-scrim" id="side-scrim" data-action="close-nav"></div>
+
+    <div class="main">
+      <header class="top" id="top"></header>
+      <main class="view" id="view" tabindex="-1">
+        <p class="boot">Loading the session…</p>
+      </main>
+      <footer class="foot" id="foot"></footer>
+    </div>
+  </div>
+
+  <div class="drawer-scrim" id="drawer-scrim" hidden data-action="close-stock"></div>
+  <section class="drawer" id="drawer" hidden role="dialog" aria-modal="true" aria-label="Stock detail"></section>
+
+  <dialog class="palette" id="palette" aria-label="Search"></dialog>
+  <dialog class="modal" id="modal"></dialog>
+
+  <div class="tip" id="tip" role="tooltip" hidden></div>
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+
+  <noscript><p class="boot">Niveshak needs JavaScript to draw the session.</p></noscript>
+  <script type="module" src="/ui/js/main.js"></script>
+</body>
+</html>
